@@ -1,3 +1,4 @@
+e
 ## Todo's
 
 - [x] Add Debounce API Calls from Search
@@ -13,7 +14,7 @@
 - [ ] Caching for Searched Results and SVG Code.
 - [ ] Refactor Codebase (Seperate Types, API Functions, etc).
 
-### Later Feature after First Realse
+### Later Feature after First Release
 - [ ] Better Icon Previewing (Using the Actual SVG as Preview for that result).
 - [ ] File based caching for results and time based re-validation.
 
