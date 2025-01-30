@@ -172,16 +172,40 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
                     if (string.IsNullOrWhiteSpace(routeUrl)) continue;
 
-                    results.Add(new Result
+                    if (svg.Route is ThemeString routeStr)
                     {
-                        Title = svg.Title,
-                        SubTitle = $"Category: {svg.Category} | URL: {routeUrl}",
-                        IcoPath = "Images/svgl.light.png",
-                        Score = 100,
-                        ContextData = routeUrl,
-                        //QueryTextDisplay = search,
-                        Action = _ => CopyToClipboard(routeUrl)
-                    });
+                        results.Add(new Result
+                        {
+                            Title = svg.Title,
+                            SubTitle = $"Category: {svg.Category} | URL: {routeStr.Route}",
+                            IcoPath = "Images/svgl.light.png",
+                            Score = 100,
+                            ContextData = routeStr,
+                            Action = _ => CopyToClipboard(routeStr.Route)
+                        });
+                    }
+                    else if (svg.Route is ThemeObject routeObj)
+                    {
+                        results.Add(new Result
+                        {
+                            Title = svg.Title,
+                            SubTitle = $"Category: {svg.Category} | Light URL: {routeObj.Route.Light} | Dark URL: {routeObj.Route.Dark}",
+                            IcoPath = "Images/svgl.light.png",
+                            Score = 100,
+                            ContextData = routeObj,
+                            Action = _ => CopyToClipboard(routeObj.Route.Dark)
+                        });
+                    }
+                    //results.Add(new Result
+                    //{
+                    //    Title = svg.Title,
+                    //    SubTitle = $"Category: {svg.Category} | URL: {routeUrl}",
+                    //    IcoPath = "Images/svgl.light.png",
+                    //    Score = 100,
+                    //    ContextData = routeUrl,
+                    //    //QueryTextDisplay = search,
+                    //    Action = _ => CopyToClipboard(routeUrl)
+                    //});
                 }
                 Log.Info($"Result from FetchDefaultTypes Class: {results}", GetType());
             }
@@ -234,21 +258,37 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             _ => string.Empty
                         };
 
-                        if (!string.IsNullOrEmpty(routeUrl))
+                        if (string.IsNullOrEmpty(routeUrl)) continue;
+
+                        if (svg.Route is ThemeString routeString)
                         {
                             results.Add(
                                     new Result
                                     {
                                         Title = svg.Title,
-                                        SubTitle = $"Category: {svg.Category?.ToString()} | Actual URL: {routeUrl}",
+                                        SubTitle = $"Category: {svg.Category?.ToString()} | Actual URL: {routeString.Route}",
                                         IcoPath = "Images/svgl.light.png",
-                                        Score = 50,
-                                        ContextData = routeUrl,
-                                        Action = _ => CopyToClipboard(routeUrl),
+                                        Score = 100,
+                                        ContextData = routeString,
+                                        Action = _ => CopyToClipboard(routeString.Route),
                                     }
 
                             );
-                        }
+                        };
+
+                        if (svg.Route is ThemeObject routeObject)
+                        {
+                            results.Add(
+                                new Result
+                                {
+                                    Title = svg.Title,
+                                    SubTitle = $"Category: {svg.Category?.ToString()} | Light URL: {routeObject.Route.Light} | Dark URL: {routeObject.Route.Dark}",
+                                    Score = 100,
+                                    IcoPath = IconPath,
+                                    ContextData = routeObject,
+                                });
+                        };
+
                     }
                 }
                 catch (Exception ex)
@@ -270,7 +310,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         // Context Menu Config from each result
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
-            if (selectedResult?.ContextData is string routeURL && !string.IsNullOrEmpty(routeURL))
+            if (selectedResult?.ContextData is ThemeString routeURL && !string.IsNullOrEmpty(routeURL.Route))
             {
                 return new List<ContextMenuResult> {
                     new ContextMenuResult
@@ -280,7 +320,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                     Glyph = "\xE8C8", // Copy
                     AcceleratorKey = Key.Enter,
-                    Action = _ => CopyToClipboard(routeURL),
+                    Action = _ => CopyToClipboard(routeURL.Route),
                 },
                     new ContextMenuResult
                         {
@@ -296,7 +336,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     {
                         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                         {
-                            FileName = routeURL,
+                            FileName = routeURL.Route,
                             UseShellExecute = true
                         });
                         return true;
@@ -309,6 +349,31 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 }
                     }
             };
+            }
+
+            else if (selectedResult?.ContextData is ThemeObject routeObject)
+            {
+                return new List<ContextMenuResult>
+                {
+                    new ContextMenuResult {
+                        PluginName = Name,
+                        Title = "Copy Light Theme Icon (Enter)",
+                        AcceleratorKey = Key.Enter,
+                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        Glyph = "\xE8C8", // Copy
+                        Action = _ => CopyToClipboard(routeObject.Route.Light)
+                    },
+                    new ContextMenuResult
+                    {
+                        PluginName = Name,
+                        Title = "Copy Dark Theme Icon (Ctrl + Enter)",
+                        AcceleratorKey = Key.Enter,
+                        AcceleratorModifiers = ModifierKeys.Control,
+                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        Glyph = "\xE708", // Quiet Hours
+                        Action = _ => CopyToClipboard(routeObject.Route.Dark)
+                    }
+                };
             }
 
             return new List<ContextMenuResult>();
