@@ -12,6 +12,7 @@
 - [ ] Add React SVG Commponent Function.
 - [ ] Add Context Menu for SVGL Results (Copy SVG Code, Copy React Component).
 - [ ] Caching for Searched Results and SVG Code.
+- [ ] Write Unit Tests for the Codebase.
 - [ ] Refactor Codebase (Seperate Types, API Functions, etc).
 
 ### Later Feature after First Release (Possibly 0.0.2)
