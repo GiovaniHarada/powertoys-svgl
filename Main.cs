@@ -307,11 +307,15 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
         }
 
+
+
         // Context Menu Config from each result
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
+            var apiClient = new MyApiClients();
             if (selectedResult?.ContextData is ThemeString routeURL && !string.IsNullOrEmpty(routeURL.Route))
             {
+
                 return new List<ContextMenuResult> {
                     new ContextMenuResult
                         {
@@ -320,7 +324,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                     Glyph = "\xE8C8", // Copy
                     AcceleratorKey = Key.Enter,
-                    Action = _ => CopyToClipboard(routeURL.Route),
+                    Action = _ => {
+                        var content = Task.Run(async () => await apiClient.GetSVGContent(routeURL.Route)).Result;
+                        Log.Info($"SVG Content: {content}", GetType());
+                        CopyToClipboard(content);
+                        return true;
+                    },
                 },
                     new ContextMenuResult
                         {
@@ -361,7 +370,10 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         AcceleratorKey = Key.Enter,
                         FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                         Glyph = "\xE8C8", // Copy
-                        Action = _ => CopyToClipboard(routeObject.Route.Light)
+                        Action = _ => {
+                            var content = Task.Run(async () => await apiClient.GetSVGContent(routeObject.Route.Light)).Result;
+                            Log.Info($"Light Theme SVG Content: {content}", GetType());
+                            CopyToClipboard(content); return true; }
                     },
                     new ContextMenuResult
                     {
@@ -371,7 +383,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         AcceleratorModifiers = ModifierKeys.Control,
                         FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                         Glyph = "\xE708", // Quiet Hours
-                        Action = _ => CopyToClipboard(routeObject.Route.Dark)
+                        Action = _ => {var content = Task.Run(async () => await apiClient.GetSVGContent(routeObject.Route.Dark)).Result; Log.Info($"Dark Theme SVG Content: {content}", GetType()); CopyToClipboard(content); return true; }
                     }
                 };
             }
