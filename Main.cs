@@ -625,6 +625,13 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 return parsedData!;
 
             }
+
+            public async Task<string> GetSVGContent(string url)
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+                string data = await response.Content.ReadAsStringAsync();
+                return data;
+            }
         }
 
 
