@@ -8,7 +8,7 @@
 - [x] Fix the Multiple action keyword being displayed for default results.
 - [x] Add seperate Context Menu Options for copying light or Dark theme SVG.
 - [x] Conditional Display Light or Dark Theme Context Menu based on the does svg have light/dark theme or not.
-- [ ] Add Copy SVG code Function.
+- [x] Add Copy SVG code Function.
 - [ ] Add React SVG Commponent Function.
 - [ ] Add Context Menu for SVGL Results (Copy SVG Code, Copy React Component).
 - [ ] Caching for Searched Results and SVG Code.
