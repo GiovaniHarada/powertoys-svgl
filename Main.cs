@@ -271,17 +271,15 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
                         if (string.IsNullOrEmpty(routeUrl)) continue;
 
-                        if (svg.Route is ThemeString routeString)
-                        {
                             results.Add(
                                     new Result
                                     {
                                         Title = svg.Title,
                                 SubTitle = svg.Category.ToString(),
                                     IcoPath = IconPath,
-                                    ContextData = routeObject,
+                                ContextData = svg,
+                                Score = 100
                                 });
-                        };
 
                         //if (svg.Route is ThemeString routeString)
                         //{
