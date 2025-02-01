@@ -92,7 +92,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         IcoPath = result.IcoPath,
                         Score = result.Score,
                         ContextData = result.ContextData,
-                        Action = result.Action,
+                        //Action = result.Action,
                         //QueryTextDisplay = query.ActionKeyword // Use only the action keyword
                     });
                 }
@@ -277,28 +277,40 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                                     new Result
                                     {
                                         Title = svg.Title,
-                                        SubTitle = $"Category: {svg.Category?.ToString()} | Actual URL: {routeString.Route}",
-                                        IcoPath = "Images/svgl.light.png",
-                                        Score = 100,
-                                        ContextData = routeString,
-                                        Action = _ => CopyToClipboard(routeString.Route),
-                                    }
-
-                            );
-                        };
-
-                        if (svg.Route is ThemeObject routeObject)
-                        {
-                            results.Add(
-                                new Result
-                                {
-                                    Title = svg.Title,
-                                    SubTitle = $"Category: {svg.Category?.ToString()} | Light URL: {routeObject.Route.Light} | Dark URL: {routeObject.Route.Dark}",
-                                    Score = 100,
+                                SubTitle = svg.Category.ToString(),
                                     IcoPath = IconPath,
                                     ContextData = routeObject,
                                 });
                         };
+
+                        //if (svg.Route is ThemeString routeString)
+                        //{
+                        //    results.Add(
+                        //            new Result
+                        //            {
+                        //                Title = svg.Title,
+                        //                SubTitle = $"Category: {svg.Category?.ToString()} | Actual URL: {routeString.Route}",
+                        //                IcoPath = "Images/svgl.light.png",
+                        //                Score = 100,
+                        //                ContextData = routeString,
+                        //                Action = _ => CopyToClipboard(routeString.Route),
+                        //            }
+
+                        //    );
+                        //};
+
+                        //if (svg.Route is ThemeObject routeObject)
+                        //{
+                        //    results.Add(
+                        //        new Result
+                        //        {
+                        //            Title = svg.Title,
+                        //            SubTitle = $"Category: {svg.Category?.ToString()} | Light URL: {routeObject.Route.Light} | Dark URL: {routeObject.Route.Dark}",
+                        //            Score = 100,
+                        //            IcoPath = IconPath,
+                        //            ContextData = routeObject,
+                        //        });
+                        //};
 
                     }
                 }
