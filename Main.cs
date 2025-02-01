@@ -177,25 +177,36 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         results.Add(new Result
                         {
                             Title = svg.Title,
-                            SubTitle = $"Category: {svg.Category} | URL: {routeStr.Route}",
+                        SubTitle = $"Category: {svg.Category}",
                             IcoPath = "Images/svgl.light.png",
                             Score = 100,
-                            ContextData = routeStr,
-                            Action = _ => CopyToClipboard(routeStr.Route)
+                        ContextData = svg,
                         });
-                    }
-                    else if (svg.Route is ThemeObject routeObj)
-                    {
-                        results.Add(new Result
-                        {
-                            Title = svg.Title,
-                            SubTitle = $"Category: {svg.Category} | Light URL: {routeObj.Route.Light} | Dark URL: {routeObj.Route.Dark}",
-                            IcoPath = "Images/svgl.light.png",
-                            Score = 100,
-                            ContextData = routeObj,
-                            Action = _ => CopyToClipboard(routeObj.Route.Dark)
-                        });
-                    }
+
+                    //if (svg.Route is ThemeString routeStr)
+                    //{
+                    //    results.Add(new Result
+                    //    {
+                    //        Title = svg.Title,
+                    //        SubTitle = $"Category: {svg.Category} | URL: {routeStr.Route}",
+                    //        IcoPath = "Images/svgl.light.png",
+                    //        Score = 100,
+                    //        ContextData = svg,
+                    //        Action = _ => CopyToClipboard(routeStr.Route)
+                    //    });
+                    //}
+                    //else if (svg.Route is ThemeObject routeObj)
+                    //{
+                    //    results.Add(new Result
+                    //    {
+                    //        Title = svg.Title,
+                    //        SubTitle = $"Category: {svg.Category} | Light URL: {routeObj.Route.Light} | Dark URL: {routeObj.Route.Dark}",
+                    //        IcoPath = "Images/svgl.light.png",
+                    //        Score = 100,
+                    //        ContextData = routeObj,
+                    //        Action = _ => CopyToClipboard(routeObj.Route.Dark)
+                    //    });
+                    //}
                     //results.Add(new Result
                     //{
                     //    Title = svg.Title,
