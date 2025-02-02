@@ -159,7 +159,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             try
             {
                 var apiClient = new MyApiClients();
-                var svgs = Task.Run(async () => await apiClient.GetSVGsByLimit(10)).Result;
+                var svgs = Task.Run(() => apiClient.GetAllSVGs()).GetAwaiter().GetResult();
 
                 foreach (var svg in svgs)
                 {
@@ -215,6 +215,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     //    //QueryTextDisplay = search,
                     //    Action = _ => CopyToClipboard(routeUrl)
                     //});
+
                 }
                 Log.Info($"Result from FetchDefaultTypes Class: {results}", GetType());
             }
