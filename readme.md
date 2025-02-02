@@ -22,5 +22,5 @@
 - [ ] File based caching for results and time based re-validation.
 - [ ] Add React SVG Commponent Function.
 - [ ] Add Caching for SVG Code.
-
+- [ ] Implement better searching i.e Fuzzy Search
 
