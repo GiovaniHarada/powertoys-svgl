@@ -328,7 +328,17 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         }
 
 
-
+        private Result CreateNoResultsFound()
+        {
+            return new Result
+            {
+                Title = "No SVGs Available",
+                SubTitle = "Could not fetch default SVG list",
+                IcoPath = IconPath,
+                Score = 0,
+                QueryTextDisplay = string.Empty
+            };
+        }
         // Context Menu Config from each result
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
