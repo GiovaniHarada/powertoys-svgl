@@ -12,7 +12,8 @@
 - [x] Add Wordmark Icon Copying options in Context Menu (For both themes if present).
 - [x] Add Context Menu for SVGL Results (i.e Copy Actual SVG Logo, Copy Actual Wordmark Logo).
 - [x] Restructure the entire codebase, to have two projects i.e Main Plugin & Unit Tests.
-- [ ] Caching for Searched Results and SVG Code.
+- [x] Caching for Searched Results.
+- [x] Improve Search Results by adding some clause i.e perfect match, title startsWiths search query and title contains search query in earlier indexes.
 - [ ] Write Unit Tests for the Codebase.
 - [ ] Refactor Codebase (Seperate Types, API Functions, etc).
 
@@ -20,6 +21,6 @@
 - [ ] Better Icon Previewing (Using the Actual SVG as Preview for that result).
 - [ ] File based caching for results and time based re-validation.
 - [ ] Add React SVG Commponent Function.
-
+- [ ] Add Caching for SVG Code.
 
 
