@@ -75,7 +75,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 //    return cachedResults;
                 //}
                 var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults());
-
+                var slicedResults = cachedResults.Slice(0, 15);
                 //foreach (var result in cachedResults)
                 //{
                 //    Log.Info($"Cached result item: Title = {result.Title}, SubTitle = {result.SubTitle}, Entire Data = {result}", GetType());
@@ -83,7 +83,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
                 //return _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(query.Search));
                 //return cachedResults;
-                foreach (var result in cachedResults)
+                foreach (var result in slicedResults)
                 {
                     results.Add(new Result
                     {
