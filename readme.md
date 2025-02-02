@@ -11,6 +11,7 @@
 - [x] Add Copy SVG code Function.
 - [x] Add Wordmark Icon Copying options in Context Menu (For both themes if present).
 - [x] Add Context Menu for SVGL Results (i.e Copy Actual SVG Logo, Copy Actual Wordmark Logo).
+- [x] Restructure the entire codebase, to have two projects i.e Main Plugin & Unit Tests.
 - [ ] Caching for Searched Results and SVG Code.
 - [ ] Write Unit Tests for the Codebase.
 - [ ] Refactor Codebase (Seperate Types, API Functions, etc).
