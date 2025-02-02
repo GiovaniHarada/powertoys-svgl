@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -45,8 +46,8 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
         // Caching variables
         private readonly IAppCache _cache = new CachingService();
-        private const string DefaultCacheKey = "SVGL_DefaultResults";
-        private const int CacheMinutes = 30;
+        private const string DefaultCacheKey = "SVGL_AllResults";
+        //private const int CacheMinutes = 30;
 
         /// <summary>
         /// Return a filtered list, based on the given query.
@@ -234,17 +235,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             return results.Count > 0 ? results : [CreateNoResultsFound()];
         }
 
-        private Result CreateNoResultsFound()
-        {
-            return new Result
-            {
-                Title = "No SVGs Available",
-                SubTitle = "Could not fetch default SVG list",
-                IcoPath = IconPath,
-                Score = 0,
-                QueryTextDisplay = string.Empty
-            };
-        }
+
 
         // The Delayed Query Class
         public List<Result> Query(Query query, bool isDelayed)
@@ -252,63 +243,92 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             var results = new List<Result>();
             var search = query.Search;
             var apiClient = new MyApiClients();
+            var cachedResult = _cache.Get<List<Result>>(DefaultCacheKey);
+
+
 
             if (isDelayed && !string.IsNullOrEmpty(search))
             {
                 Log.Info($"Delayed SVGL Query: Search='{query.Search}'", GetType());
                 try
                 {
-                    var svgs = Task.Run(async () => await apiClient.GetSVGs(search)).Result;
-                    foreach (var svg in svgs)
+                    if (cachedResult != null)
                     {
-                        string routeUrl = svg.Route switch
+                        var filterResult = cachedResult
+                                           .Where(r => r.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
+                                           .OrderByDescending(r => string.Equals(r.Title, search, StringComparison.OrdinalIgnoreCase)) // Exact match first
+                                           .ThenByDescending(r => r.Title.StartsWith(search, StringComparison.OrdinalIgnoreCase)) // Then StartsWith Second
+                                           .ThenBy(r => r.Title.IndexOf(search, StringComparison.OrdinalIgnoreCase)) // Lastly, ones which contains the search term, earlier index first.
+                                           .ToList();
+
+                        if (filterResult.Count == 0) { return [CreateNoResultsFound()]; };
+
+                        foreach (var svg in filterResult)
                         {
-                            ThemeString s => s.Route,
-                            ThemeObject o => o.Route.Dark,
-                            _ => string.Empty
-                        };
-
-                        if (string.IsNullOrEmpty(routeUrl)) continue;
-
-                        results.Add(
-                            new Result
+                            results.Add(new Result
                             {
                                 Title = svg.Title,
-                                SubTitle = svg.Category.ToString(),
-                                IcoPath = IconPath,
-                                ContextData = svg,
-                                Score = 100
+                                SubTitle = svg.SubTitle,
+                                ContextData = svg.ContextData,
+                                Score = 100,
+                                IcoPath = svg.IcoPath
                             });
+                        }
+                    }
+                    else
+                    {
+                        var svgs = Task.Run(() => apiClient.GetSVGs(search)).GetAwaiter().GetResult();
+                        foreach (var svg in svgs)
+                        {
+                            string routeUrl = svg.Route switch
+                            {
+                                ThemeString s => s.Route,
+                                ThemeObject o => o.Route.Dark,
+                                _ => string.Empty
+                            };
 
-                        //if (svg.Route is ThemeString routeString)
-                        //{
-                        //    results.Add(
-                        //            new Result
-                        //            {
-                        //                Title = svg.Title,
-                        //                SubTitle = $"Category: {svg.Category?.ToString()} | Actual URL: {routeString.Route}",
-                        //                IcoPath = "Images/svgl.light.png",
-                        //                Score = 100,
-                        //                ContextData = routeString,
-                        //                Action = _ => CopyToClipboard(routeString.Route),
-                        //            }
+                            if (string.IsNullOrEmpty(routeUrl)) continue;
 
-                        //    );
-                        //};
+                            results.Add(
+                                new Result
+                                {
+                                    Title = svg.Title,
+                                    SubTitle = svg.Category.ToString(),
+                                    IcoPath = IconPath,
+                                    ContextData = svg,
+                                    Score = 100
+                                });
 
-                        //if (svg.Route is ThemeObject routeObject)
-                        //{
-                        //    results.Add(
-                        //        new Result
-                        //        {
-                        //            Title = svg.Title,
-                        //            SubTitle = $"Category: {svg.Category?.ToString()} | Light URL: {routeObject.Route.Light} | Dark URL: {routeObject.Route.Dark}",
-                        //            Score = 100,
-                        //            IcoPath = IconPath,
-                        //            ContextData = routeObject,
-                        //        });
-                        //};
+                            //if (svg.Route is ThemeString routeString)
+                            //{
+                            //    results.Add(
+                            //            new Result
+                            //            {
+                            //                Title = svg.Title,
+                            //                SubTitle = $"Category: {svg.Category?.ToString()} | Actual URL: {routeString.Route}",
+                            //                IcoPath = "Images/svgl.light.png",
+                            //                Score = 100,
+                            //                ContextData = routeString,
+                            //                Action = _ => CopyToClipboard(routeString.Route),
+                            //            }
 
+                            //    );
+                            //};
+
+                            //if (svg.Route is ThemeObject routeObject)
+                            //{
+                            //    results.Add(
+                            //        new Result
+                            //        {
+                            //            Title = svg.Title,
+                            //            SubTitle = $"Category: {svg.Category?.ToString()} | Light URL: {routeObject.Route.Light} | Dark URL: {routeObject.Route.Dark}",
+                            //            Score = 100,
+                            //            IcoPath = IconPath,
+                            //            ContextData = routeObject,
+                            //        });
+                            //};
+
+                        }
                     }
                 }
                 catch (Exception ex)
