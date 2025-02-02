@@ -800,9 +800,9 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 return parsedData!;
             }
 
-            public async Task<List<SVGL>> GetSVGsByLimit(int limit)
+            public async Task<List<SVGL>> GetAllSVGs()
             {
-                HttpResponseMessage response = await _httpClient.GetAsync(SVGLBaseURL + "?limit=" + limit);
+                HttpResponseMessage response = await _httpClient.GetAsync(SVGLBaseURL);
                 response.EnsureSuccessStatusCode();
                 string data = await response.Content.ReadAsStringAsync();
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() } };
