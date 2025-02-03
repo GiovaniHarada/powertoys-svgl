@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using LazyCache;
 using ManagedCommon;
+using Microsoft.Extensions.Caching.Memory;
 using Wox.Plugin;
 using Wox.Plugin.Logger;
 
@@ -46,6 +47,10 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
         // Caching variables
         private readonly IAppCache _cache = new CachingService();
+        private static MemoryCacheEntryOptions cachingOption = new MemoryCacheEntryOptions()
+        {
+            Priority = CacheItemPriority.NeverRemove
+        };
         private const string DefaultCacheKey = "SVGL_AllResults";
         //private const int CacheMinutes = 30;
 
@@ -75,7 +80,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 //{
                 //    return cachedResults;
                 //}
-                var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults());
+                var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(), cachingOption);
                 var slicedResults = cachedResults.Slice(0, 15);
                 //foreach (var result in cachedResults)
                 //{
