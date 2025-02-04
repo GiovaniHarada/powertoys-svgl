@@ -267,7 +267,46 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                                            .ThenBy(r => r.Title.IndexOf(search, StringComparison.OrdinalIgnoreCase)) // Lastly, ones which contains the search term, earlier index first.
                                            .ToList();
 
-                        if (filterResult.Count == 0) { return [CreateNoResultsFound()]; };
+                        if (filterResult.Count == 0)
+                        {
+                            return [CreateNoResultsFound("No SVG Found", $"Could not found {query.Search} SVG"),
+                                new Result{
+                                    Title = "Request Logo", // Fix the ordering of result, currently Request Logo is at top and then No SVG Found, which should be other way around. 
+                                    SubTitle = "Request a Logo on SVGL's Repository",
+                                    IcoPath = IconPath,
+                                    Action = _ => {
+                            try
+                    {
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = $"https://github.com/pheralb/svgl/issues/new?assignees=&labels=request&projects=&template=request-svg.yml&title=%5B%F0%9F%94%94+Request+SVG%5D%3A+{query.Search}",
+                            UseShellExecute = true
+                        });
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Context.API.ShowMsg("Error", $"Failed to open Request Log URL: {ex.Message}");
+                        return false;
+                    }
+                        } }, new Result {
+                            Title = "Submit Logo",
+                            SubTitle = "Submit a Logo on SVGL's Repository",
+                            IcoPath = IconPath,
+                            Action = _ => {
+                                try {
+                                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
+                                        FileName = "https://github.com/pheralb/svgl#-getting-started",
+                                        UseShellExecute= true
+                                    });
+                                    return true;
+                                } catch (Exception ex) {
+                                    Context.API.ShowMsg("Error", $"Failed to Open Submit Logo URL: {ex.Message}");
+                                    return false;
+                                }
+                            }
+                        }];
+                        };
 
                         foreach (var svg in filterResult)
                         {
