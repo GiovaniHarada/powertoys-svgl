@@ -530,6 +530,39 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     };
 
                     }
+                    else if (svg.Wordmark is ThemeString wordStr)
+                    {
+                        return new List<ContextMenuResult>
+                        { new ContextMenuResult
+                        {
+                            PluginName = Name,
+                            Title = "Copy Light Theme Logo (Enter)",
+                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                            Glyph = "\xE8C8", // Copy
+                            AcceleratorKey = Key.Enter,
+                            Action = _ =>
+                            {
+                                var content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Light)).Result;
+                                CopyToClipboard(content);
+                                return true;
+                            }
+                        },
+                        new ContextMenuResult {
+                            PluginName = Name,
+                            Title = "Copy Dark Theme Logo (Ctrl + Enter)",
+                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                            Glyph = "\xE708", // Quiet Hours (Moon)
+                            AcceleratorKey = Key.Enter,
+                            AcceleratorModifiers = ModifierKeys.Control,
+                            Action = _ =>
+                            {
+                                string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
+                                CopyToClipboard(content);
+                                return true;
+                            }
+                        },new ContextMenuResult { PluginName = Name, Title = "Copy Wordmark SVG (Shift + Enter)", FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets", Glyph = "\xE8C*", AcceleratorKey = Key.Enter, AcceleratorModifiers = ModifierKeys.Shift, Action = _ => { var content = Task.Run(() => apiClient.GetSVGContent(wordStr.Route)).GetAwaiter().GetResult(); CopyToClipboard(content); return true; } }
+                        };
+                    }
 
                     return new List<ContextMenuResult>
                     {
@@ -890,6 +923,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
             public async Task<string> GetSVGContent(string url)
             {
+                // We should check the structure of url, if it is a valid URL or not. If not, then take the important pieces of the URL and construct the URL on our own (for example, the tRPC's dark theme wordmark URL is https://svgl.applibrary/trpc_wordmark_dark.svg, while it should https://svgl.app/library/trpc_wordmark_dark.svg. This needs to be handled properly)
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
                 string data = await response.Content.ReadAsStringAsync();
                 return data;
