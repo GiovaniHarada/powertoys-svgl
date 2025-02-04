@@ -384,6 +384,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             AcceleratorKey = Key.Enter,
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                             Glyph = "\xE8C8", // Copy,
+
                             Action = _ =>
                             {
                                 var content = Task.Run(async () => await apiClient.GetSVGContent(routeStr.Route)).Result;
@@ -407,6 +408,46 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             }
                         }
                     };
+                    }
+                    else if (svg.Wordmark is ThemeObject wordObj)
+                    {
+                        return new List<ContextMenuResult> { new ContextMenuResult {
+                        PluginName = Name,
+                        Title = "Copy Logo SVG (Enter)",
+                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        Glyph = "\xE8C8", // Copy
+                        AcceleratorKey = Key.Enter,
+                        Action = _ =>
+                        {
+                            var content = Task.Run(async () => await apiClient.GetSVGContent(routeStr.Route)).Result;
+                            CopyToClipboard(content);
+                            return true;
+                        }
+                    },new ContextMenuResult {
+                            PluginName = Name,
+                            Title = "Copy Light Theme Wordmark SVG (Shift + Enter)",
+                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                            Glyph = "\xE8C8", // Copy
+                            AcceleratorKey = Key.Enter,
+                            AcceleratorModifiers = ModifierKeys.Shift,
+                            Action = _ => {
+                                var content = Task.Run(() => apiClient.GetSVGContent(wordObj.Route.Light)).GetAwaiter().GetResult();
+                                CopyToClipboard(content);
+                                return true;
+                            }
+                        }, new ContextMenuResult {
+                            PluginName = Name,
+                            Title = "Copy Dark Theme Wordmark SVG (Ctrl + Shift + Enter)",
+                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                            Glyph = "\xE8C8", // Copy
+                            AcceleratorKey = Key.Enter,
+                            AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
+                            Action = _ => {
+                                var content = Task.Run(() => apiClient.GetSVGContent(wordObj.Route.Dark)).GetAwaiter().GetResult();
+                                CopyToClipboard(content);
+                                return true;
+                            }
+                        } };
                     }
 
                     return new List<ContextMenuResult> { new ContextMenuResult {
