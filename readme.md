@@ -16,6 +16,7 @@
 - [x] Improve Search Results by adding some clause i.e perfect match, title startsWiths search query and title contains search query in earlier indexes.
 - [ ] Write Unit Tests for the Codebase.
 - [ ] Handle Error/Exception, when fetching actual SVG Code (Especially for tRPC's dark themed Wordmark SVG, where there's a error from SVGL's side).
+- [ ] Show releavant context menu options for request logo and submit a logo result.
 - [ ] Refactor Codebase (Seperate Types, API Functions, etc).
 
 ### Later Feature after First Release (Possibly 0.0.2)
