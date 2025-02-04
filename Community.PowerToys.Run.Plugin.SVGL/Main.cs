@@ -393,12 +393,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         }
 
 
-        private Result CreateNoResultsFound()
+        private Result CreateNoResultsFound(string Title = "No SVGs Available", string subTitle = "Could not fetch deafult SVG list")
         {
             return new Result
             {
-                Title = "No SVGs Available",
-                SubTitle = "Could not fetch default SVG list",
+                Title = Title,
+                SubTitle = subTitle,
                 IcoPath = IconPath,
                 Score = 0,
                 QueryTextDisplay = string.Empty
@@ -733,6 +733,8 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             Context = context ?? throw new ArgumentNullException(nameof(context));
             Context.API.ThemeChanged += OnThemeChanged;
             UpdateIconPath(Context.API.GetCurrentTheme());
+
+
 
             Log.Info("SVGL plugin initialized successfully", GetType()); // Using Wox.Plugin.Logger
             Log.Info("SVGL PLUGIN LOADED", GetType()); // For debug builds
