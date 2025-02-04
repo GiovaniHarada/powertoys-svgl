@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -923,8 +924,17 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
             public async Task<string> GetSVGContent(string url)
             {
-                // We should check the structure of url, if it is a valid URL or not. If not, then take the important pieces of the URL and construct the URL on our own (for example, the tRPC's dark theme wordmark URL is https://svgl.applibrary/trpc_wordmark_dark.svg, while it should https://svgl.app/library/trpc_wordmark_dark.svg. This needs to be handled properly)
-                HttpResponseMessage response = await _httpClient.GetAsync(url);
+                string baseURL = "https://svgl.app/library/";
+                string pattern = @"library/(.*?)(\.|$)";
+
+                Match match = Regex.Match(url, pattern);
+
+                string extractedSVGName = match.Success ? match.Groups[1].Value : ""; //Todo: Throw Exception, if match.Success Fails
+                string fixedURL = baseURL + extractedSVGName + ".svg";
+                Log.Info($"Fixed URL: {fixedURL}", GetType());
+
+                HttpResponseMessage response = await _httpClient.GetAsync(fixedURL);
+                response.EnsureSuccessStatusCode();
                 string data = await response.Content.ReadAsStringAsync();
                 return data;
             }
