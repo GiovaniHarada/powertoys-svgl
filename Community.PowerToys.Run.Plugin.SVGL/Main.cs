@@ -420,22 +420,27 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         Score = 0
                     });
                 }
-            };
+            }
+            ;
 
             return results;
 
         }
 
 
-        private Result CreateNoResultsFound(string Title = "No SVGs Available", string subTitle = "Could not fetch deafult SVG list")
+        private Result CreateNoResultsFound(string Title = "No SVGs Available", string subTitle = "Could not fetch deafult SVG list", int Score = 100)
         {
             return new Result
             {
                 Title = Title,
                 SubTitle = subTitle,
                 IcoPath = IconPath,
-                Score = 0,
-                QueryTextDisplay = string.Empty
+                Score = Score,
+                Action = _ =>
+                {
+                    Context.API.ShowMsg("Info", "No SVG found for your search.");
+                    return false;
+                }
             };
         }
         // Context Menu Config from each result
