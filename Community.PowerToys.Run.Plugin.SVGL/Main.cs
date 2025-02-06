@@ -249,7 +249,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         private static string RequestLogo = "Request Logo";
         private static string SubmitLogo = "SubmitLogo";
 
-
         // The Delayed Query Class
         public List<Result> Query(Query query, bool isDelayed)
         {
@@ -261,7 +260,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
             INavigateToBrowserData requestLogoData = new INavigateToBrowserData { Identifier = RequestLogo, Search = query.Search };
             INavigateToBrowserData submitLogoData = new INavigateToBrowserData { Identifier = SubmitLogo, Search = query.Search };
-
 
             if (isDelayed && !string.IsNullOrEmpty(search))
             {
@@ -282,9 +280,9 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             results.Add(CreateNoResultsFound("No SVG Found", $"Could not found {query.Search} SVG"));
                             results.Add(new Result
                             {
-                                    Title = "Request Logo", // Fix the ordering of result, currently Request Logo is at top and then No SVG Found, which should be other way around. 
-                                    SubTitle = "Request a Logo on SVGL's Repository",
-                                    IcoPath = IconPath,
+                                Title = "Request Logo", // Fix the ordering of result, currently Request Logo is at top and then No SVG Found, which should be other way around. 
+                                SubTitle = "Request a Logo on SVGL's Repository",
+                                IcoPath = IconPath,
                                 ContextData = requestLogoData,
                                 //Action = _ =>
                                 //{
@@ -303,17 +301,13 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                                 //        return false;
                                 //    }
                                 //}
-                        });
+                            });
 
                             results.Add(new Result
-                    {
-                        Context.API.ShowMsg("Error", $"Failed to open Request Log URL: {ex.Message}");
-                        return false;
-                    }
-                        } }, new Result {
-                            Title = "Submit Logo",
-                            SubTitle = "Submit a Logo on SVGL's Repository",
-                            IcoPath = IconPath,
+                            {
+                                Title = "Submit Logo",
+                                SubTitle = "Submit a Logo on SVGL's Repository",
+                                IcoPath = IconPath,
                                 ContextData = submitLogoData,
                                 //Action = _ =>
                                 //{
@@ -332,14 +326,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                                 //        return false;
                                 //    }
                                 //}
-                                    });
-                                    return true;
-                                } catch (Exception ex) {
-                                    Context.API.ShowMsg("Error", $"Failed to Open Submit Logo URL: {ex.Message}");
-                                    return false;
-                                }
-                            }
-                        }];
+                            });
                         };
 
                         foreach (var svg in filterResult)
