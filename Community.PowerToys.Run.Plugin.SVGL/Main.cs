@@ -447,6 +447,74 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
             var apiClient = new MyApiClients();
+
+            if (selectedResult?.ContextData is INavigateToBrowserData contextRequestLogoData && contextRequestLogoData.Identifier == RequestLogo)
+            {
+                return new List<ContextMenuResult>
+                {
+                    new ContextMenuResult
+                    {
+                        PluginName = Name,
+                        Title = "Open in Browser (Enter)",
+                        AcceleratorKey = Key.Enter,
+                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        Glyph = "\xE8A7", // Icon for opening
+                        Action = _ =>
+                        {
+                            try
+                            {
+                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                {
+                                    FileName = $"https://github.com/pheralb/svgl/issues/new?assignees=&labels=request&projects=&template=request-svg.yml&title=%5B%F0%9F%94%94+Request+SVG%5D%3A+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
+                                    UseShellExecute = true
+                                }
+                                            );
+                                return true;
+                            }
+                            catch (Exception ex)
+                            {
+                                Context.API.ShowMsg("Error", $"Failed to open URL ${RequestLogo}: {ex.Message}");
+                                return false;
+                            }
+                        }
+                    }
+                };
+            };
+
+
+            if (selectedResult?.ContextData is INavigateToBrowserData contextsubmitLogoData && contextsubmitLogoData.Identifier == SubmitLogo)
+            {
+                return new List<ContextMenuResult>
+                {
+                    new ContextMenuResult
+                    {
+                        PluginName = Name,
+                        Title = "Open in Browser (Enter)",
+                        AcceleratorKey = Key.Enter,
+                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        Glyph = "\xE8A7", // Icon for opening
+                        Action = _ =>
+                        {
+                            try
+                            {
+                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                {
+                                    FileName = "https://github.com/pheralb/svgl#-getting-started",
+                                    UseShellExecute = true
+                                }
+                                            );
+                                return true;
+                            }
+                            catch (Exception ex)
+                            {
+                                Context.API.ShowMsg("Error", $"Failed to open URL ${SubmitLogo}: {ex.Message}");
+                                return false;
+                            }
+                        }
+                    }
+                };
+            };
+
             if (selectedResult?.ContextData is SVGL svg)
             {
                 if (svg.Route is ThemeString routeStr)
