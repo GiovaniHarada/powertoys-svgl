@@ -437,7 +437,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             PluginName = Name,
                             Title = "Copy Wordmark SVG (Ctrl + Enter)",
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8C8", // Copy
+                            Glyph = "\xE8D2", // Copy Wordmark Logo
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control,
                             Action = _ =>
@@ -467,7 +467,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             PluginName = Name,
                             Title = "Copy Light Theme Wordmark SVG (Shift + Enter)",
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8C8", // Copy
+                            Glyph = "\xE8D2", // Copy
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Shift,
                             Action = _ => {
@@ -543,7 +543,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             PluginName = Name,
                             Title = "Copy Light Theme Wordmark (Shift + Enter)",
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8C8", // Copy
+                            Glyph = "\xE8D2", // Copy
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Shift,
                             Action = _ =>
@@ -600,7 +600,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                                 CopyToClipboard(content);
                                 return true;
                             }
-                        },new ContextMenuResult { PluginName = Name, Title = "Copy Wordmark SVG (Shift + Enter)", FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets", Glyph = "\xE8C*", AcceleratorKey = Key.Enter, AcceleratorModifiers = ModifierKeys.Shift, Action = _ => { var content = Task.Run(() => apiClient.GetSVGContent(wordStr.Route)).GetAwaiter().GetResult(); CopyToClipboard(content); return true; } }
+                        },new ContextMenuResult { PluginName = Name, Title = "Copy Wordmark SVG (Shift + Enter)", FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets", Glyph = "\xE8D2", AcceleratorKey = Key.Enter, AcceleratorModifiers = ModifierKeys.Shift, Action = _ => { var content = Task.Run(() => apiClient.GetSVGContent(wordStr.Route)).GetAwaiter().GetResult(); CopyToClipboard(content); return true; } }
                         };
                     }
 
