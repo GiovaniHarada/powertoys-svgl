@@ -253,11 +253,14 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         // The Delayed Query Class
         public List<Result> Query(Query query, bool isDelayed)
         {
+
             var results = new List<Result>();
             var search = query.Search;
             var apiClient = new MyApiClients();
             var cachedResult = _cache.Get<List<Result>>(DefaultCacheKey);
 
+            INavigateToBrowserData requestLogoData = new INavigateToBrowserData { Identifier = RequestLogo, Search = query.Search };
+            INavigateToBrowserData submitLogoData = new INavigateToBrowserData { Identifier = SubmitLogo, Search = query.Search };
 
 
             if (isDelayed && !string.IsNullOrEmpty(search))
@@ -276,22 +279,33 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
                         if (filterResult.Count == 0)
                         {
-                            return [CreateNoResultsFound("No SVG Found", $"Could not found {query.Search} SVG"),
-                                new Result{
+                            results.Add(CreateNoResultsFound("No SVG Found", $"Could not found {query.Search} SVG"));
+                            results.Add(new Result
+                            {
                                     Title = "Request Logo", // Fix the ordering of result, currently Request Logo is at top and then No SVG Found, which should be other way around. 
                                     SubTitle = "Request a Logo on SVGL's Repository",
                                     IcoPath = IconPath,
-                                    Action = _ => {
-                            try
-                    {
-                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                        {
-                            FileName = $"https://github.com/pheralb/svgl/issues/new?assignees=&labels=request&projects=&template=request-svg.yml&title=%5B%F0%9F%94%94+Request+SVG%5D%3A+{query.Search}",
-                            UseShellExecute = true
+                                ContextData = requestLogoData,
+                                //Action = _ =>
+                                //{
+                                //    try
+                                //    {
+                                //        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                //        {
+                                //            FileName = $"https://github.com/pheralb/svgl/issues/new?assignees=&labels=request&projects=&template=request-svg.yml&title=%5B%F0%9F%94%94+Request+SVG%5D%3A+{query.Search}",
+                                //            UseShellExecute = true
+                                //        });
+                                //        return true;
+                                //    }
+                                //    catch (Exception ex)
+                                //    {
+                                //        Context.API.ShowMsg("Error", $"Failed to open Request Log URL: {ex.Message}");
+                                //        return false;
+                                //    }
+                                //}
                         });
-                        return true;
-                    }
-                    catch (Exception ex)
+
+                            results.Add(new Result
                     {
                         Context.API.ShowMsg("Error", $"Failed to open Request Log URL: {ex.Message}");
                         return false;
@@ -300,11 +314,24 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Title = "Submit Logo",
                             SubTitle = "Submit a Logo on SVGL's Repository",
                             IcoPath = IconPath,
-                            Action = _ => {
-                                try {
-                                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
-                                        FileName = "https://github.com/pheralb/svgl#-getting-started",
-                                        UseShellExecute= true
+                                ContextData = submitLogoData,
+                                //Action = _ =>
+                                //{
+                                //    try
+                                //    {
+                                //        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                //        {
+                                //            FileName = "https://github.com/pheralb/svgl#-getting-started",
+                                //            UseShellExecute = true
+                                //        });
+                                //        return true;
+                                //    }
+                                //    catch (Exception ex)
+                                //    {
+                                //        Context.API.ShowMsg("Error", $"Failed to Open Submit Logo URL: {ex.Message}");
+                                //        return false;
+                                //    }
+                                //}
                                     });
                                     return true;
                                 } catch (Exception ex) {
