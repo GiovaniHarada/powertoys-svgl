@@ -17,6 +17,7 @@
 - [ ] Write Unit Tests for the Codebase.
 - [ ] Handle Error/Exception, when fetching actual SVG Code (Especially for tRPC's dark themed Wordmark SVG, where there's a error from SVGL's side).
 - [x] Show releavant context menu options for request logo and submit a logo result.
+- [ ] Add Loading State/Result, when fetching for the first time.
 - [ ] Add a reload/re-validate cache command. Goal: In order to get latest results from the API, even though the cache gets re-validated whenever we start a new PowerToys Session but having a command to do is beneficial. Since, SVGL gets updated frequently, having a command which could just re-validate cache with starting a new session is nice to have.
 - [ ] Refactor Codebase (Seperate Types, API Functions, etc).
 
