@@ -241,6 +241,13 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             return results.Count > 0 ? results : [CreateNoResultsFound()];
         }
 
+        public class INavigateToBrowserData
+        {
+            public string Identifier { get; set; }
+            public string Search { get; set; }
+        }
+        private static string RequestLogo = "Request Logo";
+        private static string SubmitLogo = "SubmitLogo";
 
 
         // The Delayed Query Class
