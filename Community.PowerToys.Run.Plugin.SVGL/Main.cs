@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using LazyCache;
 using ManagedCommon;
@@ -251,8 +250,8 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         }
 
 
-        private static string RequestLogo = "Request Logo";
-        private static string SubmitLogo = "SubmitLogo";
+        //private static string RequestLogo = "Request Logo";
+        //private static string SubmitLogo = "SubmitLogo";
 
         // The Delayed Query Class
         public List<Result> Query(Query query, bool isDelayed)
@@ -263,8 +262,8 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             var apiClient = new MyApiClients();
             var cachedResult = _cache.Get<List<Result>>(DefaultCacheKey);
 
-            INavigateToBrowserData requestLogoData = new INavigateToBrowserData { Identifier = RequestLogo, Search = query.Search };
-            INavigateToBrowserData submitLogoData = new INavigateToBrowserData { Identifier = SubmitLogo, Search = query.Search };
+            INavigateToBrowserData requestLogoData = new INavigateToBrowserData { Identifier = Constants.RequestLogo, Search = query.Search };
+            INavigateToBrowserData submitLogoData = new INavigateToBrowserData { Identifier = Constants.SubmitLogo, Search = query.Search };
 
             if (isDelayed && !string.IsNullOrEmpty(search))
             {
@@ -285,7 +284,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             results.Add(CreateNoResultsFound("No SVG Found", $"Could not found {query.Search} SVG"));
                             results.Add(new Result
                             {
-                                Title = "Request Logo", // Fix the ordering of result, currently Request Logo is at top and then No SVG Found, which should be other way around. 
+                                Title = Constants.RequestLogo, // Fix the ordering of result, currently Request Logo is at top and then No SVG Found, which should be other way around. 
                                 SubTitle = "Request a Logo on SVGL's Repository",
                                 IcoPath = IconPath,
                                 ContextData = requestLogoData,
@@ -310,7 +309,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
                             results.Add(new Result
                             {
-                                Title = "Submit Logo",
+                                Title = Constants.SubmitLogo,
                                 SubTitle = "Submit a Logo on SVGL's Repository",
                                 IcoPath = IconPath,
                                 ContextData = submitLogoData,
@@ -440,14 +439,14 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         {
             var apiClient = new MyApiClients();
 
-            if (selectedResult?.ContextData is INavigateToBrowserData contextRequestLogoData && contextRequestLogoData.Identifier == RequestLogo)
+            if (selectedResult?.ContextData is INavigateToBrowserData contextRequestLogoData && contextRequestLogoData.Identifier == Constants.RequestLogo)
             {
                 return new List<ContextMenuResult>
                 {
                     new ContextMenuResult
                     {
                         PluginName = Name,
-                        Title = "Open in Browser (Enter)",
+                        Title = Constants.OpenInBrowserMessage,
                         AcceleratorKey = Key.Enter,
                         FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                         Glyph = "\xE8A7", // Icon for opening
@@ -457,7 +456,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             {
                                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                                 {
-                                    FileName = $"https://github.com/pheralb/svgl/issues/new?assignees=&labels=request&projects=&template=request-svg.yml&title=%5B%F0%9F%94%94+Request+SVG%5D%3A+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
+                                    FileName = $"${Constants.RequestLogoURL}+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
                                     UseShellExecute = true
                                 }
                                             );
@@ -465,7 +464,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             }
                             catch (Exception ex)
                             {
-                                Context.API.ShowMsg("Error", $"Failed to open URL ${RequestLogo}: {ex.Message}");
+                                Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.RequestLogo}: {ex.Message}");
                                 return false;
                             }
                         }
@@ -474,14 +473,14 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             };
 
 
-            if (selectedResult?.ContextData is INavigateToBrowserData contextsubmitLogoData && contextsubmitLogoData.Identifier == SubmitLogo)
+            if (selectedResult?.ContextData is INavigateToBrowserData contextsubmitLogoData && contextsubmitLogoData.Identifier == Constants.SubmitLogo)
             {
                 return new List<ContextMenuResult>
                 {
                     new ContextMenuResult
                     {
                         PluginName = Name,
-                        Title = "Open in Browser (Enter)",
+                        Title = Constants.OpenInBrowserMessage,
                         AcceleratorKey = Key.Enter,
                         FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                         Glyph = "\xE8A7", // Icon for opening
@@ -491,7 +490,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             {
                                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                                 {
-                                    FileName = "https://github.com/pheralb/svgl#-getting-started",
+                                    FileName = Constants.SubmitLogoURL,
                                     UseShellExecute = true
                                 }
                                             );
@@ -499,7 +498,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             }
                             catch (Exception ex)
                             {
-                                Context.API.ShowMsg("Error", $"Failed to open URL ${SubmitLogo}: {ex.Message}");
+                                Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.SubmitLogo}: {ex.Message}");
                                 return false;
                             }
                         }
@@ -523,14 +522,13 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             AcceleratorKey = Key.Enter,
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                             Glyph = "\xE8C8", // Copy,
-
-                            Action = _ =>
-                            {
-                                var content = Task.Run(async () => await apiClient.GetSVGContent(routeStr.Route)).Result;
-                                Log.Info($"Copy Logo SVG: {content}", GetType());
-                                CopyToClipboard(content);
-                                return true;
-                            },
+                            Action = _ => Utils.CopySVGContent(routeStr.Route)
+                            //{
+                            //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(routeStr.Route)).Result;
+                            //    Log.Info($"Copy Logo SVG: {content}", GetType());
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //},
                         },
                         new ContextMenuResult{
                             PluginName = Name,
@@ -539,12 +537,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Glyph = "\xE8D2", // Copy Wordmark Logo
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control,
-                            Action = _ =>
-                            {
-                                var content = Task.Run(async () => await apiClient.GetSVGContent(wordStr.Route)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(wordStr.Route)
+                            //{
+                            //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(wordStr.Route)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         }
                     };
                     }
@@ -556,12 +554,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                         Glyph = "\xE8C8", // Copy
                         AcceleratorKey = Key.Enter,
-                        Action = _ =>
-                        {
-                            var content = Task.Run(async () => await apiClient.GetSVGContent(routeStr.Route)).Result;
-                            CopyToClipboard(content);
-                            return true;
-                        }
+                        Action = _ => Utils.CopySVGContent(routeStr.Route)
+                        //{
+                        //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(routeStr.Route)).Result;
+                        //    Utils.CopyToClipboard(content);
+                        //    return true;
+                        //}
                     },new ContextMenuResult {
                             PluginName = Name,
                             Title = "Copy Light Theme Wordmark SVG (Shift + Enter)",
@@ -569,11 +567,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Glyph = "\xE8D2", // Copy
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Shift,
-                            Action = _ => {
-                                var content = Task.Run(() => apiClient.GetSVGContent(wordObj.Route.Light)).GetAwaiter().GetResult();
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(wordObj.Route.Light)
+                            //{
+                            //    var content = Task.Run(() => MyApiClients.GetSVGContent(wordObj.Route.Light)).GetAwaiter().GetResult();
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         }, new ContextMenuResult {
                             PluginName = Name,
                             Title = "Copy Dark Theme Wordmark SVG (Ctrl + Shift + Enter)",
@@ -581,11 +580,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Glyph = "\xE8D3", // Quiet Hours (Moon)
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
-                            Action = _ => {
-                                var content = Task.Run(() => apiClient.GetSVGContent(wordObj.Route.Dark)).GetAwaiter().GetResult();
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ =>  Utils.CopySVGContent(wordObj.Route.Dark)
+                            //{
+                            //    var content = Task.Run(() => MyApiClients.GetSVGContent(wordObj.Route.Dark)).GetAwaiter().GetResult();
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         } };
                     }
 
@@ -595,12 +595,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                         Glyph = "\xE8C8", // Copy
                         AcceleratorKey = Key.Enter,
-                        Action = _ =>
-                        {
-                            var content = Task.Run(async () => await apiClient.GetSVGContent(routeStr.Route)).Result;
-                            CopyToClipboard(content);
-                            return true;
-                        }
+                        Action = _ => Utils.CopySVGContent(routeStr.Route)
+                        //{
+                        //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(routeStr.Route)).Result;
+                        //    Utils.CopyToClipboard(content);
+                        //    return true;
+                        //}
                     } };
                 }
 
@@ -617,12 +617,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                             Glyph = "\xE706", // Brightness (Sun)
                             AcceleratorKey = Key.Enter,
-                            Action = _ =>
-                            {
-                                var content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Light)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
+                            //{
+                            //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(routeObj.Route.Light)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         },
                         new ContextMenuResult {
                             PluginName = Name,
@@ -631,12 +631,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Glyph = "\xE708", // Quiet Hours (Moon)
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control,
-                            Action = _ =>
-                            {
-                                string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
+                            //{
+                            //    string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         },
                         new ContextMenuResult {
                             PluginName = Name,
@@ -645,12 +645,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Glyph = "\xE8D2", // Copy
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Shift,
-                            Action = _ =>
-                            {
-                                string content = Task.Run(async () => await apiClient.GetSVGContent(wordObj.Route.Light)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(wordObj.Route.Light)
+                            //{
+                            //    string content = Task.Run(async () => await MyApiClients.GetSVGContent(wordObj.Route.Light)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         },
                         new ContextMenuResult {
                             PluginName = Name,
@@ -659,12 +659,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Glyph = "\xE8D3", // Quiet Hours (Moon)
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
-                            Action = _ =>
-                            {
-                                string content = Task.Run(async () => await apiClient.GetSVGContent(wordObj.Route.Dark)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(wordObj.Route.Dark)
+                            //{
+                            //    string content = Task.Run(async () => await MyApiClients.GetSVGContent(wordObj.Route.Dark)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         }
                     };
 
@@ -679,12 +679,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                             Glyph = "\xE706", // Brightness (Sun)
                             AcceleratorKey = Key.Enter,
-                            Action = _ =>
-                            {
-                                var content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Light)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
+                            //{
+                            //    var content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Light)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         },
                         new ContextMenuResult {
                             PluginName = Name,
@@ -693,13 +693,15 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Glyph = "\xE708", // Quiet Hours (Moon)
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control,
-                            Action = _ =>
-                            {
-                                string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
-                        },new ContextMenuResult { PluginName = Name, Title = "Copy Wordmark SVG (Shift + Enter)", FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets", Glyph = "\xE8D2", AcceleratorKey = Key.Enter, AcceleratorModifiers = ModifierKeys.Shift, Action = _ => { var content = Task.Run(() => apiClient.GetSVGContent(wordStr.Route)).GetAwaiter().GetResult(); CopyToClipboard(content); return true; } }
+                            Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
+                            //{
+                            //    string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
+                        },new ContextMenuResult { PluginName = Name, Title = "Copy Wordmark SVG (Shift + Enter)", FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets", Glyph = "\xE8D2", AcceleratorKey = Key.Enter, AcceleratorModifiers = ModifierKeys.Shift, Action = _ => Utils.CopySVGContent(wordStr.Route)
+                        //{ var content = Task.Run(() => apiClient.GetSVGContent(wordStr.Route)).GetAwaiter().GetResult(); Utils.CopyToClipboard(content); return true; } 
+                        }
                         };
                     }
 
@@ -712,12 +714,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
                             Glyph = "\xE706", // Brightness (Sun)
                             AcceleratorKey = Key.Enter,
-                            Action = _ =>
-                            {
-                                var content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Light)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
+                            //{
+                            //    var content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Light)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         },
                         new ContextMenuResult {
                             PluginName = Name,
@@ -726,12 +728,12 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             Glyph = "\xE708", // Quiet Hours (Moon)
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control,
-                            Action = _ =>
-                            {
-                                string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
-                                CopyToClipboard(content);
-                                return true;
-                            }
+                            Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
+                            //{
+                            //    string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
+                            //    Utils.CopyToClipboard(content);
+                            //    return true;
+                            //}
                         }
                     };
                 }
@@ -813,15 +815,15 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             return new List<ContextMenuResult>();
         }
 
-        public static bool CopyToClipboard(string value)
-        {
-            if (!string.IsNullOrEmpty(value))
-            {
-                Clipboard.SetText(value);
-                return true;
-            }
-            return false;
-        }
+        //public static bool CopyToClipboard(string value)
+        //{
+        //    if (!string.IsNullOrEmpty(value))
+        //    {
+        //        Clipboard.SetText(value);
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         /// <summary>
         /// Initialize the plugin with the given <see cref="PluginInitContext"/>.
