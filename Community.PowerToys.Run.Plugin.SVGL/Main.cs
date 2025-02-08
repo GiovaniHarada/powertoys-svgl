@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -67,6 +63,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             //var search = query.Search;
             //var apiClient = new MyApiClients();
 
+
             if (string.IsNullOrWhiteSpace(query.Search))
             {
                 //string cacheKey = "SVGL_DEFAULT_RESULTS";
@@ -80,13 +77,25 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 //if (_cache.Get(DefaultCacheKey) is List<Result> cachedResults)
                 //{
                 //    return cachedResults;
-                //}
+                //}    results.Add(new Result
+                results.Add(new Result
+                {
+                    Title = "Loading...",
+                    SubTitle = "Please wait while we fetch the data...",
+                    IcoPath = IconPath, // You can use an icon that indicates loading
+                });
+
                 var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(), cachingOption);
                 var slicedResults = cachedResults.Slice(0, 15);
+
+                results.Clear();
                 //foreach (var result in cachedResults)
                 //{
                 //    Log.Info($"Cached result item: Title = {result.Title}, SubTitle = {result.SubTitle}, Entire Data = {result}", GetType());
                 //}
+
+
+
 
                 //return _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(query.Search));
                 //return cachedResults;
@@ -241,11 +250,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             return results.Count > 0 ? results : [CreateNoResultsFound()];
         }
 
-        public class INavigateToBrowserData
-        {
-            public string Identifier { get; set; }
-            public string Search { get; set; }
-        }
+
         private static string RequestLogo = "Request Logo";
         private static string SubmitLogo = "SubmitLogo";
 
@@ -343,7 +348,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     }
                     else
                     {
-                        var svgs = Task.Run(() => apiClient.GetSVGs(search)).GetAwaiter().GetResult();
+                        var svgs = Task.Run(() => apiClient.GetSVGFromSource(search)).GetAwaiter().GetResult();
                         foreach (var svg in svgs)
                         {
                             string routeUrl = svg.Route switch
@@ -573,7 +578,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             PluginName = Name,
                             Title = "Copy Dark Theme Wordmark SVG (Ctrl + Shift + Enter)",
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8C8", // Copy
+                            Glyph = "\xE8D3", // Quiet Hours (Moon)
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
                             Action = _ => {
@@ -610,7 +615,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             PluginName = Name,
                             Title = "Copy Light Theme Logo (Enter)",
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8C8", // Copy
+                            Glyph = "\xE706", // Brightness (Sun)
                             AcceleratorKey = Key.Enter,
                             Action = _ =>
                             {
@@ -649,9 +654,9 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         },
                         new ContextMenuResult {
                             PluginName = Name,
-                            Title = "Copy Light Dark Wordmark (Ctrl + Shift + Enter)",
+                            Title = "Copy Dark Theme Wordmark (Ctrl + Shift + Enter)",
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE708", // Copy
+                            Glyph = "\xE8D3", // Quiet Hours (Moon)
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
                             Action = _ =>
@@ -672,7 +677,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             PluginName = Name,
                             Title = "Copy Light Theme Logo (Enter)",
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8C8", // Copy
+                            Glyph = "\xE706", // Brightness (Sun)
                             AcceleratorKey = Key.Enter,
                             Action = _ =>
                             {
@@ -705,7 +710,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             PluginName = Name,
                             Title = "Copy Light Theme Logo (Enter)",
                             FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8C8", // Copy
+                            Glyph = "\xE706", // Brightness (Sun)
                             AcceleratorKey = Key.Enter,
                             Action = _ =>
                             {
@@ -828,8 +833,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             Context.API.ThemeChanged += OnThemeChanged;
             UpdateIconPath(Context.API.GetCurrentTheme());
 
-
-
             Log.Info("SVGL plugin initialized successfully", GetType()); // Using Wox.Plugin.Logger
             Log.Info("SVGL PLUGIN LOADED", GetType()); // For debug builds
         }
@@ -871,209 +874,209 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         private void OnThemeChanged(Theme currentTheme, Theme newTheme) => UpdateIconPath(newTheme);
 
         // Types for SVGL Response (From SVGL.API.DEMO)
-        public class SVGL
-        {
-            [JsonPropertyName("id")]
-            public int Id { get; set; }
+        //public class SVGL
+        //{
+        //    [JsonPropertyName("id")]
+        //    public int Id { get; set; }
 
-            [JsonPropertyName("title")]
-            public string Title { get; set; }
+        //    [JsonPropertyName("title")]
+        //    public string Title { get; set; }
 
-            [JsonPropertyName("category")]
-            [JsonConverter(typeof(MyApiClients.CategoryBaseConverter))]
-            public CategoryBase Category { get; set; }
+        //    [JsonPropertyName("category")]
+        //    [JsonConverter(typeof(MyApiClients.CategoryBaseConverter))]
+        //    public CategoryBase Category { get; set; }
 
-            [JsonPropertyName("route")]
-            [JsonConverter(typeof(MyApiClients.ThemeBaseConverter))]
-            public ThemeBase Route { get; set; }
+        //    [JsonPropertyName("route")]
+        //    [JsonConverter(typeof(MyApiClients.ThemeBaseConverter))]
+        //    public ThemeBase Route { get; set; }
 
-            [JsonPropertyName("wordmark")]
-            [JsonConverter(typeof(MyApiClients.ThemeBaseConverter))]
-            public ThemeBase Wordmark { get; set; }
+        //    [JsonPropertyName("wordmark")]
+        //    [JsonConverter(typeof(MyApiClients.ThemeBaseConverter))]
+        //    public ThemeBase Wordmark { get; set; }
 
-            [JsonPropertyName("url")]
-            public string Url { get; set; }
-        }
+        //    [JsonPropertyName("url")]
+        //    public string Url { get; set; }
+        //}
 
-        public abstract class CategoryBase
-        { }
+        //public abstract class CategoryBase
+        //{ }
 
-        public class CategoryString : CategoryBase
-        {
-            public string Category { get; set; }
+        //public class CategoryString : CategoryBase
+        //{
+        //    public string Category { get; set; }
 
-            public CategoryString(string category)
-            {
-                Category = category;
-            }
+        //    public CategoryString(string category)
+        //    {
+        //        Category = category;
+        //    }
 
-            public override string ToString() => Category;
-        }
+        //    public override string ToString() => Category;
+        //}
 
-        public class CategoryArray : CategoryBase
-        {
-            public List<string> Categories { get; set; }
+        //public class CategoryArray : CategoryBase
+        //{
+        //    public List<string> Categories { get; set; }
 
-            public CategoryArray(List<string> categories)
-            {
-                Categories = categories;
-            }
+        //    public CategoryArray(List<string> categories)
+        //    {
+        //        Categories = categories;
+        //    }
 
-            public override string ToString() => string.Join(", ", Categories);
-        }
+        //    public override string ToString() => string.Join(", ", Categories);
+        //}
 
-        public class ThemeBase { }
+        //public class ThemeBase { }
 
-        public class ThemeString : ThemeBase
-        {
-            public string Route { get; set; }
+        //public class ThemeString : ThemeBase
+        //{
+        //    public string Route { get; set; }
 
-            public ThemeString(string route)
-            {
-                Route = route;
-            }
+        //    public ThemeString(string route)
+        //    {
+        //        Route = route;
+        //    }
 
-            public override string ToString() => Route;
-        }
+        //    public override string ToString() => Route;
+        //}
 
-        public class ThemeObject : ThemeBase
-        {
-            public SVGThemes Route { get; set; }
+        //public class ThemeObject : ThemeBase
+        //{
+        //    public SVGThemes Route { get; set; }
 
-            public ThemeObject(SVGThemes route)
-            {
-                Route = route;
-            }
+        //    public ThemeObject(SVGThemes route)
+        //    {
+        //        Route = route;
+        //    }
 
-            public override string ToString() => $"Light: {Route.Light}, Dark: {Route.Dark}";
-        }
+        //    public override string ToString() => $"Light: {Route.Light}, Dark: {Route.Dark}";
+        //}
 
-        public class SVGThemes
-        {
-            [JsonPropertyName("light")]
-            public string Light { get; set; }
-            [JsonPropertyName("dark")]
-            public string Dark { get; set; }
-        }
+        //public class SVGThemes
+        //{
+        //    [JsonPropertyName("light")]
+        //    public string Light { get; set; }
+        //    [JsonPropertyName("dark")]
+        //    public string Dark { get; set; }
+        //}
 
         // Old Api Client from SVG.API.Demo Project
-        public class MyApiClients
-        {
-            private static readonly HttpClient _httpClient = new HttpClient();
-            public static string SVGLBaseURL = "https://api.svgl.app";
+        //public class MyApiClients
+        //{
+        //    private static readonly HttpClient _httpClient = new HttpClient();
+        //    public static string SVGLBaseURL = "https://api.svgl.app";
 
-            public class CategoryBaseConverter : JsonConverter<CategoryBase>
-            {
-                public override CategoryBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-                {
-                    if (reader.TokenType == JsonTokenType.String)
-                    {
-                        string category = reader.GetString();
-                        return new CategoryString(category);
-                    }
-                    else if (reader.TokenType == JsonTokenType.StartArray)
-                    {
-                        var categories = JsonSerializer.Deserialize<List<string>>(ref reader, options);
-                        return new CategoryArray(categories);
-                    }
-                    throw new JsonException("Invalid JSON for CategoryBase");
-                }
+        //    public class CategoryBaseConverter : JsonConverter<CategoryBase>
+        //    {
+        //        public override CategoryBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        //        {
+        //            if (reader.TokenType == JsonTokenType.String)
+        //            {
+        //                string category = reader.GetString();
+        //                return new CategoryString(category);
+        //            }
+        //            else if (reader.TokenType == JsonTokenType.StartArray)
+        //            {
+        //                var categories = JsonSerializer.Deserialize<List<string>>(ref reader, options);
+        //                return new CategoryArray(categories);
+        //            }
+        //            throw new JsonException("Invalid JSON for CategoryBase");
+        //        }
 
-                public override void Write(Utf8JsonWriter writer, CategoryBase value, JsonSerializerOptions options)
-                {
-                    switch (value)
-                    {
-                        case CategoryString categoryString:
-                            writer.WriteStringValue(categoryString.Category);
-                            break;
+        //        public override void Write(Utf8JsonWriter writer, CategoryBase value, JsonSerializerOptions options)
+        //        {
+        //            switch (value)
+        //            {
+        //                case CategoryString categoryString:
+        //                    writer.WriteStringValue(categoryString.Category);
+        //                    break;
 
-                        case CategoryArray categoryArray:
-                            JsonSerializer.Serialize(writer, categoryArray.Categories, options);
-                            break;
+        //                case CategoryArray categoryArray:
+        //                    JsonSerializer.Serialize(writer, categoryArray.Categories, options);
+        //                    break;
 
-                        default:
-                            throw new InvalidOperationException("Unknown CategoryBase type");
-                    }
-                }
-            }
+        //                default:
+        //                    throw new InvalidOperationException("Unknown CategoryBase type");
+        //            }
+        //        }
+        //    }
 
-            // ThemeBaseConverter: Used in order to make sure, the Json Deserialization deserialize Route Type/Property Properly, since Route is Discrimanating/Union Type (of string and object).
-            public class ThemeBaseConverter : JsonConverter<ThemeBase>
-            {
-                public override ThemeBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-                {
-                    if (reader.TokenType == JsonTokenType.String)
-                    {
-                        // Deserialize as ThemeString
-                        string themeString = reader.GetString();
-                        return new ThemeString(themeString);
-                    }
-                    else if (reader.TokenType == JsonTokenType.StartObject)
-                    {
-                        // Deserialize (Reading) as ThemeObject
-                        SVGThemes themeObject = JsonSerializer.Deserialize<SVGThemes>(ref reader, options);
-                        return new ThemeObject(themeObject);
-                    }
+        //    // ThemeBaseConverter: Used in order to make sure, the Json Deserialization deserialize Route Type/Property Properly, since Route is Discrimanating/Union Type (of string and object).
+        //    public class ThemeBaseConverter : JsonConverter<ThemeBase>
+        //    {
+        //        public override ThemeBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        //        {
+        //            if (reader.TokenType == JsonTokenType.String)
+        //            {
+        //                // Deserialize as ThemeString
+        //                string themeString = reader.GetString();
+        //                return new ThemeString(themeString);
+        //            }
+        //            else if (reader.TokenType == JsonTokenType.StartObject)
+        //            {
+        //                // Deserialize (Reading) as ThemeObject
+        //                SVGThemes themeObject = JsonSerializer.Deserialize<SVGThemes>(ref reader, options);
+        //                return new ThemeObject(themeObject);
+        //            }
 
-                    throw new JsonException("Invalid JSON for RouteBase");
-                }
+        //            throw new JsonException("Invalid JSON for RouteBase");
+        //        }
 
-                public override void Write(Utf8JsonWriter writer, ThemeBase value, JsonSerializerOptions options)
-                {
-                    switch (value)
-                    {
-                        case ThemeString routeString:
-                            writer.WriteStringValue(routeString.Route);
-                            break;
+        //        public override void Write(Utf8JsonWriter writer, ThemeBase value, JsonSerializerOptions options)
+        //        {
+        //            switch (value)
+        //            {
+        //                case ThemeString routeString:
+        //                    writer.WriteStringValue(routeString.Route);
+        //                    break;
 
-                        case ThemeObject routeObject:
-                            JsonSerializer.Serialize(writer, routeObject.Route, options);
-                            break;
+        //                case ThemeObject routeObject:
+        //                    JsonSerializer.Serialize(writer, routeObject.Route, options);
+        //                    break;
 
-                        default:
-                            throw new InvalidOperationException("Unknown RouteBase type");
-                    }
-                }
-            }
+        //                default:
+        //                    throw new InvalidOperationException("Unknown RouteBase type");
+        //            }
+        //        }
+        //    }
 
-            public async Task<List<SVGL>> GetSVGs(string query)
-            {
-                HttpResponseMessage response = await _httpClient.GetAsync(SVGLBaseURL + "?search=" + query);
-                response.EnsureSuccessStatusCode();
-                string data = await response.Content.ReadAsStringAsync();
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() } };
-                var parsedData = JsonSerializer.Deserialize<List<SVGL>>(data, options);
-                return parsedData!;
-            }
+        //    public async Task<List<SVGL>> GetSVGs(string query)
+        //    {
+        //        HttpResponseMessage response = await _httpClient.GetAsync(SVGLBaseURL + "?search=" + query);
+        //        response.EnsureSuccessStatusCode();
+        //        string data = await response.Content.ReadAsStringAsync();
+        //        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() } };
+        //        var parsedData = JsonSerializer.Deserialize<List<SVGL>>(data, options);
+        //        return parsedData!;
+        //    }
 
-            public async Task<List<SVGL>> GetAllSVGs()
-            {
-                HttpResponseMessage response = await _httpClient.GetAsync(SVGLBaseURL);
-                response.EnsureSuccessStatusCode();
-                string data = await response.Content.ReadAsStringAsync();
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() } };
-                var parsedData = JsonSerializer.Deserialize<List<SVGL>>(data, options);
-                return parsedData!;
+        //    public async Task<List<SVGL>> GetAllSVGs()
+        //    {
+        //        HttpResponseMessage response = await _httpClient.GetAsync(SVGLBaseURL);
+        //        response.EnsureSuccessStatusCode();
+        //        string data = await response.Content.ReadAsStringAsync();
+        //        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() } };
+        //        var parsedData = JsonSerializer.Deserialize<List<SVGL>>(data, options);
+        //        return parsedData!;
 
-            }
+        //    }
 
-            public async Task<string> GetSVGContent(string url)
-            {
-                string baseURL = "https://svgl.app/library/";
-                string pattern = @"library/(.*?)(\.|$)";
+        //    public async Task<string> GetSVGContent(string url)
+        //    {
+        //        string baseURL = "https://svgl.app/library/";
+        //        string pattern = @"library/(.*?)(\.|$)";
 
-                Match match = Regex.Match(url, pattern);
+        //        Match match = Regex.Match(url, pattern);
 
-                string extractedSVGName = match.Success ? match.Groups[1].Value : ""; //Todo: Throw Exception, if match.Success Fails
-                string fixedURL = baseURL + extractedSVGName + ".svg";
-                Log.Info($"Fixed URL: {fixedURL}", GetType());
+        //        string extractedSVGName = match.Success ? match.Groups[1].Value : ""; //Todo: Throw Exception, if match.Success Fails
+        //        string fixedURL = baseURL + extractedSVGName + ".svg";
+        //        Log.Info($"Fixed URL: {fixedURL}", GetType());
 
-                HttpResponseMessage response = await _httpClient.GetAsync(fixedURL);
-                response.EnsureSuccessStatusCode();
-                string data = await response.Content.ReadAsStringAsync();
-                return data;
-            }
-        }
+        //        HttpResponseMessage response = await _httpClient.GetAsync(fixedURL);
+        //        response.EnsureSuccessStatusCode();
+        //        string data = await response.Content.ReadAsStringAsync();
+        //        return data;
+        //    }
+        //}
 
 
     }
