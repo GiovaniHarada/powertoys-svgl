@@ -37,7 +37,6 @@ public class MyApiClients
 
     public async Task<string> GetSVGContent(string url)
     {
-        //const string baseURL = "https://svgl.app/library/";
         string pattern = @"library/(.*?)(\.|$)";
 
         Match match = Regex.Match(url, pattern);
