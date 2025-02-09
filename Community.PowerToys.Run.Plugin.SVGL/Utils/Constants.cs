@@ -23,6 +23,4 @@ public static class Constants
 
     public const string CopyLightThemeSVGWordmarMessage = "Copy Light Theme Wordmark (Shift + Enter)";
     public const string CopyDarkThemeSVGWordmarMessage = "Copy Dark Theme Wordmark (Ctrl + Shift + Enter)";
-
-
 }
