@@ -40,4 +40,9 @@ public class Utils
             Action = context => args.CustomAction?.Invoke(context) ?? CopySVGContent(args.CopyContent)
         };
     }
+
+    public static string CapitalizeFirstLetter(string input)
+    {
+        return string.IsNullOrEmpty(input) ? input : char.ToUpper(input[0]) + input[1..];
+    }
 }
