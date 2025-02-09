@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
+using Wox.Plugin;
 
 namespace Community.PowerToys.Run.Plugin.SVGL;
 
@@ -25,4 +26,18 @@ public class Utils
         return true;
     }
 
+    public static ContextMenuResult GetContextMenuResult(IGetContextMenuResult args)
+    {
+        return new ContextMenuResult
+        {
+            PluginName = "SVGL",
+            Title = args.Title,
+            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+            Glyph = args.Glyph,
+            AcceleratorKey = args.AcceleratorKey,
+            AcceleratorModifiers = args.AcceleratorModifiers,
+            //Action = context => args.CustomAction != null ? args.CustomAction(context) : CopySVGContent(args.CopyContent)
+            Action = context => args.CustomAction?.Invoke(context) ?? CopySVGContent(args.CopyContent)
+        };
+    }
 }
