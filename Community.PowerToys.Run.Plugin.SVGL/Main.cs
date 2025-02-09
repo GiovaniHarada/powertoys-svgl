@@ -471,62 +471,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 };
             }
 
-            //if (selectedResult?.ContextData is INavigateToBrowserData contextRequestLogoData && contextRequestLogoData.Identifier == Constants.RequestLogo)
-            //{
-            //    return new List<ContextMenuResult>
-            //    {
-            //        Utils.GetContextMenuResult(new IGetContextMenuResult
-            //        {
-            //            Title = Constants.OpenInBrowserMessage,
-            //            Glyph = "\xE8A7",
-            //            AcceleratorKey = Key.Enter,
-            //            CustomAction = context =>
-            //            {
-            //                try {
-            //                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
-            //                        FileName = $"{Constants.RequestLogoURL}+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
-            //                        UseShellExecute = true
-            //                    });
-            //                    return true;
-            //                } catch (Exception ex)
-            //                {
-            //                    Context.API.ShowMsg("Error", $"Failed to open URL {Constants.RequestLogo}: {ex.Message}");
-            //                    return false;
-            //        } } }),
-            //    };
-            //};
-
-
-            //if (selectedResult?.ContextData is INavigateToBrowserData contextsubmitLogoData && contextsubmitLogoData.Identifier == Constants.SubmitLogo)
-            //{
-            //    return new List<ContextMenuResult>
-            //    {
-            //        Utils.GetContextMenuResult(new IGetContextMenuResult
-            //        {
-            //           Title = Constants.OpenInBrowserMessage,
-            //           Glyph = "\xE8A7",// Icon for opening
-            //           AcceleratorKey = Key.Enter,
-            //           CustomAction = context =>
-            //           {
-            //                try
-            //                {
-            //                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            //                     {
-            //                          FileName = Constants.SubmitLogoURL,
-            //                          UseShellExecute = true
-            //                     });
-            //                     return true;
-            //                }
-            //                catch (Exception ex)
-            //                {
-            //                     Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.SubmitLogo}: {ex.Message}");
-            //                     return false;
-            //                }
-            //            }
-            //        })
-            //    };
-            //};
-
             if (selectedResult?.ContextData is SVGL svg)
             {
                 if (svg.Route is ThemeString routeStr)
