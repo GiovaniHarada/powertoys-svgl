@@ -9,7 +9,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Wox.Plugin;
 using Wox.Plugin.Logger;
 
-
 namespace Community.PowerToys.Run.Plugin.SVGL
 {
     /// <summary>
@@ -443,32 +442,50 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             {
                 return new List<ContextMenuResult>
                 {
-                    new ContextMenuResult
+                    Utils.GetContextMenuResult(new IGetContextMenuResult
                     {
-                        PluginName = Name,
                         Title = Constants.OpenInBrowserMessage,
+                        Glyph = "\xE8A7",
                         AcceleratorKey = Key.Enter,
-                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                        Glyph = "\xE8A7", // Icon for opening
-                        Action = _ =>
+                        CustomAction = context =>
                         {
-                            try
-                            {
-                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                                {
-                                    FileName = $"${Constants.RequestLogoURL}+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
+                            try {
+                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
+                                    FileName = $"{Constants.RequestLogoURL}+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
                                     UseShellExecute = true
-                                }
-                                            );
+                                });
                                 return true;
-                            }
-                            catch (Exception ex)
+                            } catch (Exception ex)
                             {
-                                Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.RequestLogo}: {ex.Message}");
+                                Context.API.ShowMsg("Error", $"Failed to open URL {Constants.RequestLogo}: {ex.Message}");
                                 return false;
-                            }
-                        }
-                    }
+                    } } }),
+                    //new ContextMenuResult
+                    //{
+                    //    PluginName = Name,
+                    //    Title = Constants.OpenInBrowserMessage,
+                    //    AcceleratorKey = Key.Enter,
+                    //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                    //    Glyph = "\xE8A7", // Icon for opening
+                    //    Action = _ =>
+                    //    {
+                    //        try
+                    //        {
+                    //            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    //            {
+                    //                FileName = $"${Constants.RequestLogoURL}+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
+                    //                UseShellExecute = true
+                    //            }
+                    //                        );
+                    //            return true;
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+                    //            Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.RequestLogo}: {ex.Message}");
+                    //            return false;
+                    //        }
+                    //    }
+                    //}
                 };
             };
 
@@ -477,32 +494,55 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             {
                 return new List<ContextMenuResult>
                 {
-                    new ContextMenuResult
+                    Utils.GetContextMenuResult(new IGetContextMenuResult
                     {
-                        PluginName = Name,
-                        Title = Constants.OpenInBrowserMessage,
-                        AcceleratorKey = Key.Enter,
-                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                        Glyph = "\xE8A7", // Icon for opening
-                        Action = _ =>
-                        {
+                       Title = Constants.OpenInBrowserMessage,
+                       Glyph = "\xE8A7",// Icon for opening
+                       AcceleratorKey = Key.Enter,
+                       CustomAction = context =>
+                       {
                             try
                             {
-                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                                {
-                                    FileName = Constants.SubmitLogoURL,
-                                    UseShellExecute = true
-                                }
-                                            );
-                                return true;
+                                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                 {
+                                      FileName = Constants.SubmitLogoURL,
+                                      UseShellExecute = true
+                                 });
+                                 return true;
                             }
                             catch (Exception ex)
                             {
-                                Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.SubmitLogo}: {ex.Message}");
-                                return false;
+                                 Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.SubmitLogo}: {ex.Message}");
+                                 return false;
                             }
                         }
-                    }
+                    })
+                    //new ContextMenuResult
+                    //{
+                    //    PluginName = Name,
+                    //    Title = Constants.OpenInBrowserMessage,
+                    //    AcceleratorKey = Key.Enter,
+                    //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                    //    Glyph = "\xE8A7", // Icon for opening
+                    //    Action = _ =>
+                    //    {
+                    //        try
+                    //        {
+                    //            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    //            {
+                    //                FileName = Constants.SubmitLogoURL,
+                    //                UseShellExecute = true
+                    //            }
+                    //                        );
+                    //            return true;
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+                    //            Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.SubmitLogo}: {ex.Message}");
+                    //            return false;
+                    //        }
+                    //    }
+                    //}
                 };
             };
 
@@ -514,94 +554,141 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     {
 
                         return new List<ContextMenuResult>
+                    {   Utils.GetContextMenuResult(new IGetContextMenuResult
                     {
-                        new ContextMenuResult
-                        {
-                            PluginName = Name,
-                            Title = "Copy Logo SVG (Enter)",
-                            AcceleratorKey = Key.Enter,
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8C8", // Copy,
-                            Action = _ => Utils.CopySVGContent(routeStr.Route)
+                        Title = Constants.CopySVGLogoMessage,
+                        Glyph = "\xE8C8",
+                        AcceleratorKey = Key.Enter,
+                        CopyContent = routeStr.Route
+                    }) ,
+                        //new ContextMenuResult
+                        //{
+                        //    PluginName = Name,
+                        //    Title = "Copy Logo SVG (Enter)",
+                        //    AcceleratorKey = Key.Enter,
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE8C8", // Copy,
+                        //    Action = _ => Utils.CopySVGContent(routeStr.Route)
                             //{
                             //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(routeStr.Route)).Result;
                             //    Log.Info($"Copy Logo SVG: {content}", GetType());
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //},
-                        },
-                        new ContextMenuResult{
-                            PluginName = Name,
-                            Title = "Copy Wordmark SVG (Ctrl + Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8D2", // Copy Wordmark Logo
+                        //},
+                        Utils.GetContextMenuResult (new IGetContextMenuResult
+                        {
+                            Title = Constants.CopySVGWordmarkMessage,
+                            Glyph = "\xE8D2",
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control,
-                            Action = _ => Utils.CopySVGContent(wordStr.Route)
+                            CopyContent = wordStr.Route
+                        }),
+                        //new ContextMenuResult{
+                        //    PluginName = Name,
+                        //    Title = "Copy Wordmark SVG (Ctrl + Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE8D2", // Copy Wordmark Logo
+                        //    AcceleratorKey = Key.Enter,
+                        //    AcceleratorModifiers = ModifierKeys.Control,
+                        //    Action = _ => Utils.CopySVGContent(wordStr.Route)
                             //{
                             //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(wordStr.Route)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        }
+                        //}
                     };
                     }
                     else if (svg.Wordmark is ThemeObject wordObj)
                     {
-                        return new List<ContextMenuResult> { new ContextMenuResult {
-                        PluginName = Name,
-                        Title = "Copy Logo SVG (Enter)",
-                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                        Glyph = "\xE8C8", // Copy
-                        AcceleratorKey = Key.Enter,
-                        Action = _ => Utils.CopySVGContent(routeStr.Route)
+                        return new List<ContextMenuResult> {
+                            Utils.GetContextMenuResult(new IGetContextMenuResult{
+                                Title = Constants.CopySVGLogoMessage,
+                                Glyph = "\xE8C8",
+                                AcceleratorKey = Key.Enter,
+                                CopyContent = routeStr.Route
+                            }),
+                        //    new ContextMenuResult {
+                        //PluginName = Name,
+                        //Title = "Copy Logo SVG (Enter)",
+                        //FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //Glyph = "\xE8C8", // Copy
+                        //AcceleratorKey = Key.Enter,
+                        //Action = _ => Utils.CopySVGContent(routeStr.Route)
                         //{
                         //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(routeStr.Route)).Result;
                         //    Utils.CopyToClipboard(content);
                         //    return true;
                         //}
-                    },new ContextMenuResult {
-                            PluginName = Name,
-                            Title = "Copy Light Theme Wordmark SVG (Shift + Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8D2", // Copy
+                    //},
+                        Utils.GetContextMenuResult(new IGetContextMenuResult {
+                            Title = Constants.CopyLightThemeSVGWordmarMessage,
+                            Glyph = "\xE8D2",
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Shift,
-                            Action = _ => Utils.CopySVGContent(wordObj.Route.Light)
+                            CopyContent = wordObj.Route.Light
+                        }),
+                        //new ContextMenuResult {
+                        //    PluginName = Name,
+                        //    Title = "Copy Light Theme Wordmark SVG (Shift + Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE8D2", // Copy
+                        //    AcceleratorKey = Key.Enter,
+                        //    AcceleratorModifiers = ModifierKeys.Shift,
+                        //    Action = _ => Utils.CopySVGContent(wordObj.Route.Light)
                             //{
                             //    var content = Task.Run(() => MyApiClients.GetSVGContent(wordObj.Route.Light)).GetAwaiter().GetResult();
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        }, new ContextMenuResult {
-                            PluginName = Name,
-                            Title = "Copy Dark Theme Wordmark SVG (Ctrl + Shift + Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //}, 
+                        Utils.GetContextMenuResult(new IGetContextMenuResult{
+                            Title = Constants.CopyDarkThemeSVGWordmarMessage,
                             Glyph = "\xE8D3", // Quiet Hours (Moon)
                             AcceleratorKey = Key.Enter,
                             AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
-                            Action = _ =>  Utils.CopySVGContent(wordObj.Route.Dark)
+                            CopyContent = wordObj.Route.Dark,
+                        }),
+                        //new ContextMenuResult {
+                        //    PluginName = Name,
+                        //    Title = "Copy Dark Theme Wordmark SVG (Ctrl + Shift + Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE8D3", // Quiet Hours (Moon)
+                        //    AcceleratorKey = Key.Enter,
+                        //    AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
+                        //    Action = _ =>  Utils.CopySVGContent(wordObj.Route.Dark)
                             //{
                             //    var content = Task.Run(() => MyApiClients.GetSVGContent(wordObj.Route.Dark)).GetAwaiter().GetResult();
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        } };
+                        //}, 
+                        };
                     }
 
-                    return new List<ContextMenuResult> { new ContextMenuResult {
-                        PluginName = Name,
-                        Title = "Copy Logo SVG (Enter)",
-                        FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                        Glyph = "\xE8C8", // Copy
-                        AcceleratorKey = Key.Enter,
-                        Action = _ => Utils.CopySVGContent(routeStr.Route)
+                    return new List<ContextMenuResult> {
+                        Utils.GetContextMenuResult(new IGetContextMenuResult
+                        {
+                            Title = Constants.CopySVGLogoMessage,
+                            Glyph = "\xE8C8",
+                            AcceleratorKey = Key.Enter,
+                            CopyContent = routeStr.Route
+                        }),
+                        //new ContextMenuResult {
+                        //PluginName = Name,
+                        //Title = "Copy Logo SVG (Enter)",
+                        //FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //Glyph = "\xE8C8", // Copy
+                        //AcceleratorKey = Key.Enter,
+                        //Action = _ => Utils.CopySVGContent(routeStr.Route)
                         //{
                         //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(routeStr.Route)).Result;
                         //    Utils.CopyToClipboard(content);
                         //    return true;
                         //}
-                    } };
+                    //}, 
+                    };
                 }
 
                 if (svg.Route is ThemeObject routeObj)
@@ -610,131 +697,203 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     {
                         return new List<ContextMenuResult>
                     {
-                        new ContextMenuResult
-                        {
-                            PluginName = Name,
-                            Title = "Copy Light Theme Logo (Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE706", // Brightness (Sun)
-                            AcceleratorKey = Key.Enter,
-                            Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
+                            Utils.GetContextMenuResult(new IGetContextMenuResult
+                            {
+                                Title = Constants.CopyLightThemeSVGLogoMessage,
+                                Glyph = "\xE706",// Brightness (Sun)
+                                AcceleratorKey = Key.Enter,
+                                CopyContent = routeObj.Route.Light
+                            }),
+                            Utils.GetContextMenuResult(new IGetContextMenuResult{
+                                Title = Constants.CopyDarkThemeSVGLogoMessage,
+                                Glyph = "\xE708", // Quiet Hours (Moon)
+                                AcceleratorKey = Key.Enter,
+                                AcceleratorModifiers = ModifierKeys.Control,
+                                CopyContent = routeObj.Route.Dark
+                            }),
+                            Utils.GetContextMenuResult(new IGetContextMenuResult
+                            {
+                                Title = Constants.CopyLightThemeSVGWordmarMessage,
+                                Glyph = "\xE706",
+                                AcceleratorKey = Key.Enter,
+                                AcceleratorModifiers = ModifierKeys.Shift,
+                                CopyContent = wordObj.Route.Light
+                            }),
+                            Utils.GetContextMenuResult(new IGetContextMenuResult{
+                                Title = Constants.CopyDarkThemeSVGLogoMessage,
+                                Glyph = "\xE8D3",
+                                AcceleratorKey = Key.Enter,
+                                AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
+                                CopyContent = wordObj.Route.Dark
+                            })
+                        //new ContextMenuResult
+                        //{
+                        //    PluginName = Name,
+                        //    Title = "Copy Light Theme Logo (Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE706", // Brightness (Sun)
+                        //    AcceleratorKey = Key.Enter,
+                        //    Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
                             //{
                             //    var content = Task.Run(async () => await MyApiClients.GetSVGContent(routeObj.Route.Light)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        },
-                        new ContextMenuResult {
-                            PluginName = Name,
-                            Title = "Copy Dark Theme Logo (Ctrl + Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE708", // Quiet Hours (Moon)
-                            AcceleratorKey = Key.Enter,
-                            AcceleratorModifiers = ModifierKeys.Control,
-                            Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
+                        //},
+                        //new ContextMenuResult {
+                        //    PluginName = Name,
+                        //    Title = "Copy Dark Theme Logo (Ctrl + Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE708", // Quiet Hours (Moon)
+                        //    AcceleratorKey = Key.Enter,
+                        //    AcceleratorModifiers = ModifierKeys.Control,
+                            //Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
                             //{
                             //    string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        },
-                        new ContextMenuResult {
-                            PluginName = Name,
-                            Title = "Copy Light Theme Wordmark (Shift + Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8D2", // Copy
-                            AcceleratorKey = Key.Enter,
-                            AcceleratorModifiers = ModifierKeys.Shift,
-                            Action = _ => Utils.CopySVGContent(wordObj.Route.Light)
+                        //},
+                        //new ContextMenuResult {
+                        //    PluginName = Name,
+                        //    Title = "Copy Light Theme Wordmark (Shift + Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE8D2", // Copy
+                        //    AcceleratorKey = Key.Enter,
+                        //    AcceleratorModifiers = ModifierKeys.Shift,
+                        //    Action = _ => Utils.CopySVGContent(wordObj.Route.Light)
                             //{
                             //    string content = Task.Run(async () => await MyApiClients.GetSVGContent(wordObj.Route.Light)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        },
-                        new ContextMenuResult {
-                            PluginName = Name,
-                            Title = "Copy Dark Theme Wordmark (Ctrl + Shift + Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE8D3", // Quiet Hours (Moon)
-                            AcceleratorKey = Key.Enter,
-                            AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
-                            Action = _ => Utils.CopySVGContent(wordObj.Route.Dark)
+                        //},
+                        //new ContextMenuResult {
+                        //    PluginName = Name,
+                        //    Title = "Copy Dark Theme Wordmark (Ctrl + Shift + Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE8D3", // Quiet Hours (Moon)
+                        //    AcceleratorKey = Key.Enter,
+                        //    AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift,
+                        //    Action = _ => Utils.CopySVGContent(wordObj.Route.Dark)
                             //{
                             //    string content = Task.Run(async () => await MyApiClients.GetSVGContent(wordObj.Route.Dark)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        }
+                        //}
                     };
 
                     }
                     else if (svg.Wordmark is ThemeString wordStr)
                     {
                         return new List<ContextMenuResult>
-                        { new ContextMenuResult
                         {
-                            PluginName = Name,
-                            Title = "Copy Light Theme Logo (Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE706", // Brightness (Sun)
-                            AcceleratorKey = Key.Enter,
-                            Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
+                             Utils.GetContextMenuResult(new IGetContextMenuResult{
+                                Title = Constants.CopyLightThemeSVGLogoMessage,
+                                Glyph = "\xE706",// Brightness (Sun)
+                                AcceleratorKey = Key.Enter,
+                                CopyContent = routeObj.Route.Light
+                            }),
+                            Utils.GetContextMenuResult(new IGetContextMenuResult{
+                                Title = Constants.CopyDarkThemeSVGLogoMessage,
+                                Glyph = "\xE708", // Quiet Hours (Moon)
+                                AcceleratorKey = Key.Enter,
+                                AcceleratorModifiers = ModifierKeys.Control,
+                                CopyContent = routeObj.Route.Dark
+                            }),
+                            Utils.GetContextMenuResult (new IGetContextMenuResult{
+                                Title = Constants.CopySVGWordmarkMessage,
+                                Glyph = "\xE8D2",
+                                AcceleratorKey = Key.Enter,
+                                AcceleratorModifiers = ModifierKeys.Control,
+                                CopyContent = wordStr.Route
+                            }),
+                        //    new ContextMenuResult
+                        //{
+                        //    PluginName = Name,
+                        //    Title = "Copy Light Theme Logo (Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE706", // Brightness (Sun)
+                        //    AcceleratorKey = Key.Enter,
+                        //    Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
                             //{
                             //    var content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Light)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        },
-                        new ContextMenuResult {
-                            PluginName = Name,
-                            Title = "Copy Dark Theme Logo (Ctrl + Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE708", // Quiet Hours (Moon)
-                            AcceleratorKey = Key.Enter,
-                            AcceleratorModifiers = ModifierKeys.Control,
-                            Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
+                        //},
+                        //new ContextMenuResult {
+                        //    PluginName = Name,
+                        //    Title = "Copy Dark Theme Logo (Ctrl + Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE708", // Quiet Hours (Moon)
+                        //    AcceleratorKey = Key.Enter,
+                        //    AcceleratorModifiers = ModifierKeys.Control,
+                        //    Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
                             //{
                             //    string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        },new ContextMenuResult { PluginName = Name, Title = "Copy Wordmark SVG (Shift + Enter)", FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets", Glyph = "\xE8D2", AcceleratorKey = Key.Enter, AcceleratorModifiers = ModifierKeys.Shift, Action = _ => Utils.CopySVGContent(wordStr.Route)
+                        //},
+                        //new ContextMenuResult { 
+                        //    PluginName = Name, 
+                        //    Title = "Copy Wordmark SVG (Shift + Enter)", 
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets", 
+                        //    Glyph = "\xE8D2", 
+                        //    AcceleratorKey = Key.Enter, 
+                        //    AcceleratorModifiers = ModifierKeys.Shift, 
+                        //    Action = _ => Utils.CopySVGContent(wordStr.Route)
                         //{ var content = Task.Run(() => apiClient.GetSVGContent(wordStr.Route)).GetAwaiter().GetResult(); Utils.CopyToClipboard(content); return true; } 
-                        }
+                        //}
                         };
                     }
 
                     return new List<ContextMenuResult>
                     {
-                        new ContextMenuResult
-                        {
-                            PluginName = Name,
-                            Title = "Copy Light Theme Logo (Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE706", // Brightness (Sun)
-                            AcceleratorKey = Key.Enter,
-                            Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
+                              Utils.GetContextMenuResult(new IGetContextMenuResult
+                            {
+                                Title = Constants.CopyLightThemeSVGLogoMessage,
+                                Glyph = "\xE706",// Brightness (Sun)
+                                AcceleratorKey = Key.Enter,
+                                CopyContent = routeObj.Route.Light
+                            }),
+                            Utils.GetContextMenuResult(new IGetContextMenuResult{
+                                Title = Constants.CopyDarkThemeSVGLogoMessage,
+                                Glyph = "\xE708", // Quiet Hours (Moon)
+                                AcceleratorKey = Key.Enter,
+                                AcceleratorModifiers = ModifierKeys.Control,
+                                CopyContent = routeObj.Route.Dark
+                            }),
+                        //new ContextMenuResult
+                        //{
+                        //    PluginName = Name,
+                        //    Title = "Copy Light Theme Logo (Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE706", // Brightness (Sun)
+                        //    AcceleratorKey = Key.Enter,
+                        //    Action = _ => Utils.CopySVGContent(routeObj.Route.Light)
                             //{
                             //    var content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Light)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        },
-                        new ContextMenuResult {
-                            PluginName = Name,
-                            Title = "Copy Dark Theme Logo (Ctrl + Enter)",
-                            FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                            Glyph = "\xE708", // Quiet Hours (Moon)
-                            AcceleratorKey = Key.Enter,
-                            AcceleratorModifiers = ModifierKeys.Control,
-                            Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
+                        //},
+                        //new ContextMenuResult {
+                        //    PluginName = Name,
+                        //    Title = "Copy Dark Theme Logo (Ctrl + Enter)",
+                        //    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                        //    Glyph = "\xE708", // Quiet Hours (Moon)
+                        //    AcceleratorKey = Key.Enter,
+                        //    AcceleratorModifiers = ModifierKeys.Control,
+                        //    Action = _ => Utils.CopySVGContent(routeObj.Route.Dark)
                             //{
                             //    string content = Task.Run(async () => await apiClient.GetSVGContent(routeObj.Route.Dark)).Result;
                             //    Utils.CopyToClipboard(content);
                             //    return true;
                             //}
-                        }
+                        //}
                     };
                 }
             }
