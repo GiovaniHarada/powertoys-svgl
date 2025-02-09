@@ -469,6 +469,40 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 CopyContent = content
             });
         }
+
+        private List<ContextMenuResult> HandleSvgRoutes(ThemeBase route, ThemeBase wordmark)
+        {
+            var results = new List<ContextMenuResult>();
+
+            if (route is ThemeString routeStr)
+            {
+                results.Add(CreateCopyMenuItem(Constants.CopySVGLogoMessage, "\xE8C8",
+                    routeStr.Route, Key.Enter));
+            }
+            else if (route is ThemeObject routeObj)
+            {
+                results.Add(CreateCopyMenuItem(Constants.CopyLightThemeSVGLogoMessage, "\xE706",
+                    routeObj.Route.Light, Key.Enter));
+                results.Add(CreateCopyMenuItem(Constants.CopyDarkThemeSVGLogoMessage, "\xE708",
+                    routeObj.Route.Dark, Key.Enter, ModifierKeys.Control));
+            }
+
+            if (wordmark is ThemeString wordStr)
+            {
+                results.Add(CreateCopyMenuItem(Constants.CopySVGWordmarkMessage, "\xE8D2",
+                    wordStr.Route, Key.Enter, ModifierKeys.Control));
+            }
+            else if (wordmark is ThemeObject wordObj)
+            {
+                results.Add(CreateCopyMenuItem(Constants.CopyLightThemeSVGWordmarMessage, "\xE706",
+                    wordObj.Route.Light, Key.Enter, ModifierKeys.Shift));
+                results.Add(CreateCopyMenuItem(Constants.CopyDarkThemeSVGWordmarMessage, "\xE8D3",
+                    wordObj.Route.Dark, Key.Enter, ModifierKeys.Control | ModifierKeys.Shift));
+            }
+
+            return results;
+        }
+
         // Context Menu Config from each result
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
