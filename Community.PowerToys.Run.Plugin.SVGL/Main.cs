@@ -435,30 +435,31 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         {
             var apiClient = new MyApiClients();
 
-            if (selectedResult?.ContextData is INavigateToBrowserData contextRequestLogoData && contextRequestLogoData.Identifier == Constants.RequestLogo)
+        private List<ContextMenuResult> HandleNavigateToBrowserDataResult(INavigateToBrowserData data, string constantName, string url)
             {
                 return new List<ContextMenuResult>
                 {
-                    Utils.GetContextMenuResult(new IGetContextMenuResult
-                    {
+            Utils.GetContextMenuResult(new IGetContextMenuResult {
                         Title = Constants.OpenInBrowserMessage,
                         Glyph = "\xE8A7",
                         AcceleratorKey = Key.Enter,
-                        CustomAction = context =>
+                CustomAction = _ => {
+                    try
                         {
-                            try {
-                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
-                                    FileName = $"{Constants.RequestLogoURL}+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{
+                        FileName = url,
                                     UseShellExecute = true
                                 });
                                 return true;
                             } catch (Exception ex)
                             {
-                                Context.API.ShowMsg("Error", $"Failed to open URL {Constants.RequestLogo}: {ex.Message}");
+                        Context.API.ShowMsg("Error", $"Failed to open URL {constantName}: {ex.Message}");
                                 return false;
-                    } } }),
+                    }
+                }
+            })
                 };
-            };
+        }
 
 
             if (selectedResult?.ContextData is INavigateToBrowserData contextsubmitLogoData && contextsubmitLogoData.Identifier == Constants.SubmitLogo)
