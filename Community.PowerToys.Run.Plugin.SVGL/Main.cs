@@ -430,67 +430,102 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 }
             };
         }
+
+        private List<ContextMenuResult> HandleNavigateToBrowserDataResult(INavigateToBrowserData data, string constantName, string url)
+        {
+            return new List<ContextMenuResult>
+        {
+            Utils.GetContextMenuResult(new IGetContextMenuResult {
+                Title = Constants.OpenInBrowserMessage,
+                Glyph = "\xE8A7",
+                AcceleratorKey = Key.Enter,
+                CustomAction = _ => {
+                    try
+                    {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{
+                        FileName = url,
+                        UseShellExecute = true
+                    });
+                        return true;
+                    } catch (Exception ex)
+                    {
+                        Context.API.ShowMsg("Error", $"Failed to open URL {constantName}: {ex.Message}");
+                        return false;
+                    }
+                }
+            })
+        };
+        }
         // Context Menu Config from each result
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
             var apiClient = new MyApiClients();
 
-        private List<ContextMenuResult> HandleNavigateToBrowserDataResult(INavigateToBrowserData data, string constantName, string url)
+            if (selectedResult?.ContextData is INavigateToBrowserData browserData)
             {
-                return new List<ContextMenuResult>
+                return browserData.Identifier switch
                 {
-            Utils.GetContextMenuResult(new IGetContextMenuResult {
-                        Title = Constants.OpenInBrowserMessage,
-                        Glyph = "\xE8A7",
-                        AcceleratorKey = Key.Enter,
-                CustomAction = _ => {
-                    try
-                        {
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{
-                        FileName = url,
-                                    UseShellExecute = true
-                                });
-                                return true;
-                            } catch (Exception ex)
-                            {
-                        Context.API.ShowMsg("Error", $"Failed to open URL {constantName}: {ex.Message}");
-                                return false;
-                    }
-                }
-            })
+                    Constants.RequestLogo => HandleNavigateToBrowserDataResult(browserData, Constants.RequestLogo, $"{Constants.RequestLogoURL}+{Utils.CapitalizeFirstLetter(browserData.Search)}"),
+                    Constants.SubmitLogo => HandleNavigateToBrowserDataResult(browserData, Constants.SubmitLogo, Constants.SubmitLogoURL),
+                    _ => new List<ContextMenuResult>()
                 };
-        }
+            }
+
+            //if (selectedResult?.ContextData is INavigateToBrowserData contextRequestLogoData && contextRequestLogoData.Identifier == Constants.RequestLogo)
+            //{
+            //    return new List<ContextMenuResult>
+            //    {
+            //        Utils.GetContextMenuResult(new IGetContextMenuResult
+            //        {
+            //            Title = Constants.OpenInBrowserMessage,
+            //            Glyph = "\xE8A7",
+            //            AcceleratorKey = Key.Enter,
+            //            CustomAction = context =>
+            //            {
+            //                try {
+            //                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
+            //                        FileName = $"{Constants.RequestLogoURL}+{contextRequestLogoData.Search.Replace(contextRequestLogoData.Search.ElementAt(0).ToString(), contextRequestLogoData.Search.ElementAt(0).ToString().ToUpper())}",
+            //                        UseShellExecute = true
+            //                    });
+            //                    return true;
+            //                } catch (Exception ex)
+            //                {
+            //                    Context.API.ShowMsg("Error", $"Failed to open URL {Constants.RequestLogo}: {ex.Message}");
+            //                    return false;
+            //        } } }),
+            //    };
+            //};
 
 
-            if (selectedResult?.ContextData is INavigateToBrowserData contextsubmitLogoData && contextsubmitLogoData.Identifier == Constants.SubmitLogo)
-            {
-                return new List<ContextMenuResult>
-                {
-                    Utils.GetContextMenuResult(new IGetContextMenuResult
-                    {
-                       Title = Constants.OpenInBrowserMessage,
-                       Glyph = "\xE8A7",// Icon for opening
-                       AcceleratorKey = Key.Enter,
-                       CustomAction = context =>
-                       {
-                            try
-                            {
-                                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                                 {
-                                      FileName = Constants.SubmitLogoURL,
-                                      UseShellExecute = true
-                                 });
-                                 return true;
-                            }
-                            catch (Exception ex)
-                            {
-                                 Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.SubmitLogo}: {ex.Message}");
-                                 return false;
-                            }
-                        }
-                    })
-                };
-            };
+            //if (selectedResult?.ContextData is INavigateToBrowserData contextsubmitLogoData && contextsubmitLogoData.Identifier == Constants.SubmitLogo)
+            //{
+            //    return new List<ContextMenuResult>
+            //    {
+            //        Utils.GetContextMenuResult(new IGetContextMenuResult
+            //        {
+            //           Title = Constants.OpenInBrowserMessage,
+            //           Glyph = "\xE8A7",// Icon for opening
+            //           AcceleratorKey = Key.Enter,
+            //           CustomAction = context =>
+            //           {
+            //                try
+            //                {
+            //                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            //                     {
+            //                          FileName = Constants.SubmitLogoURL,
+            //                          UseShellExecute = true
+            //                     });
+            //                     return true;
+            //                }
+            //                catch (Exception ex)
+            //                {
+            //                     Context.API.ShowMsg("Error", $"Failed to open URL ${Constants.SubmitLogo}: {ex.Message}");
+            //                     return false;
+            //                }
+            //            }
+            //        })
+            //    };
+            //};
 
             if (selectedResult?.ContextData is SVGL svg)
             {
