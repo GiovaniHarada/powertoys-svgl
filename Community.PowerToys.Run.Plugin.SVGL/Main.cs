@@ -456,6 +456,19 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             })
         };
         }
+
+        private ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content,
+    Key key, ModifierKeys modifiers = ModifierKeys.None)
+        {
+            return Utils.GetContextMenuResult(new IGetContextMenuResult
+            {
+                Title = title,
+                Glyph = glyph,
+                AcceleratorKey = key,
+                AcceleratorModifiers = modifiers,
+                CopyContent = content
+            });
+        }
         // Context Menu Config from each result
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
