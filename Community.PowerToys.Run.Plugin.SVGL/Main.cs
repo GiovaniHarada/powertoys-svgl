@@ -280,27 +280,11 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             results.Add(CreateNoResultsFound("No SVG Found", $"Could not found {query.Search} SVG"));
                             results.Add(new Result
                             {
-                                Title = Constants.RequestLogo, // Fix the ordering of result, currently Request Logo is at top and then No SVG Found, which should be other way around. 
+                                Title = Constants.RequestLogo,
                                 SubTitle = "Request a Logo on SVGL's Repository",
                                 IcoPath = IconPath,
                                 ContextData = requestLogoData,
-                                //Action = _ =>
-                                //{
-                                //    try
-                                //    {
-                                //        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                                //        {
-                                //            FileName = $"https://github.com/pheralb/svgl/issues/new?assignees=&labels=request&projects=&template=request-svg.yml&title=%5B%F0%9F%94%94+Request+SVG%5D%3A+{query.Search}",
-                                //            UseShellExecute = true
-                                //        });
-                                //        return true;
-                                //    }
-                                //    catch (Exception ex)
-                                //    {
-                                //        Context.API.ShowMsg("Error", $"Failed to open Request Log URL: {ex.Message}");
-                                //        return false;
-                                //    }
-                                //}
+                                Action = _ => OpenURL($"{Constants.RequestLogoURL}+{Utils.CapitalizeFirstLetter(query.Search)}", Constants.RequestLogo)
                             });
 
                             results.Add(new Result
@@ -309,23 +293,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                                 SubTitle = "Submit a Logo on SVGL's Repository",
                                 IcoPath = IconPath,
                                 ContextData = submitLogoData,
-                                //Action = _ =>
-                                //{
-                                //    try
-                                //    {
-                                //        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                                //        {
-                                //            FileName = "https://github.com/pheralb/svgl#-getting-started",
-                                //            UseShellExecute = true
-                                //        });
-                                //        return true;
-                                //    }
-                                //    catch (Exception ex)
-                                //    {
-                                //        Context.API.ShowMsg("Error", $"Failed to Open Submit Logo URL: {ex.Message}");
-                                //        return false;
-                                //    }
-                                //}
+                                Action = _ => OpenURL(Constants.SubmitLogoURL, Constants.SubmitLogo)
                             });
                         };
 
@@ -439,22 +407,27 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 Title = Constants.OpenInBrowserMessage,
                 Glyph = "\xE8A7",
                 AcceleratorKey = Key.Enter,
-                CustomAction = _ => {
-                    try
-                    {
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{
-                        FileName = url,
-                        UseShellExecute = true
-                    });
-                        return true;
-                    } catch (Exception ex)
-                    {
-                        Context.API.ShowMsg("Error", $"Failed to open URL {constantName}: {ex.Message}");
-                        return false;
-                    }
-                }
+                CustomAction = _ => OpenURL(url, constantName)
             })
         };
+        }
+
+        private bool OpenURL(string url, string constantName)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Context.API.ShowMsg("Error", $"Failed to open URL {constantName}: {ex.Message}");
+                return false;
+            }
         }
 
         private ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content,
