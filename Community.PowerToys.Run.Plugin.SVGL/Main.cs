@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using LazyCache;
 using ManagedCommon;
@@ -76,17 +75,17 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 //{
                 //    return cachedResults;
                 //}    results.Add(new Result
-                results.Add(new Result
-                {
-                    Title = "Loading...",
-                    SubTitle = "Please wait while we fetch the data...",
-                    IcoPath = IconPath, // You can use an icon that indicates loading
-                });
+                //results.Add(new Result
+                //{
+                //    Title = "Loading...",
+                //    SubTitle = "Please wait while we fetch the data...",
+                //    IcoPath = IconPath, // You can use an icon that indicates loading
+                //});
 
                 var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(), cachingOption);
                 var slicedResults = cachedResults.Slice(0, 15);
 
-                results.Clear();
+                //results.Clear();
                 //foreach (var result in cachedResults)
                 //{
                 //    Log.Info($"Cached result item: Title = {result.Title}, SubTitle = {result.SubTitle}, Entire Data = {result}", GetType());
@@ -173,7 +172,9 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             try
             {
                 var apiClient = new MyApiClients();
-                var svgs = Task.Run(() => apiClient.GetAllSVGs()).GetAwaiter().GetResult();
+                //var svgs = Task.Run(() => apiClient.GetAllSVGs()).GetAwaiter().GetResult();
+                var svgs = apiClient.GetAllSVGs().Result;
+                //var svgs = await apiClient.GetAllSVGs();
 
                 foreach (var svg in svgs)
                 {
@@ -311,7 +312,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     }
                     else
                     {
-                        var svgs = Task.Run(() => apiClient.GetSVGFromSource(search)).GetAwaiter().GetResult();
+                        var svgs = apiClient.GetSVGFromSource(search).Result;
                         foreach (var svg in svgs)
                         {
                             string routeUrl = svg.Route switch
