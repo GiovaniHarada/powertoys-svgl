@@ -27,4 +27,5 @@
 - [ ] Add React SVG Commponent Function.
 - [ ] Add Caching for SVG Code.
 - [ ] Implement better searching i.e Fuzzy Search
+- [ ] Improve `Types.cs`, since it's not that good for sure.
 
