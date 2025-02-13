@@ -10,31 +10,13 @@ using Wox.Plugin.Logger;
 
 namespace Community.PowerToys.Run.Plugin.SVGL
 {
-    /// <summary>
-    /// Main class of this plugin that implement all used interfaces.
-    /// </summary>
     public class Main : IPlugin, IContextMenu, IDisposable, IDelayedExecutionPlugin
     {
-        /// <summary>
-        /// ID of the plugin.
-        /// </summary>
-        /// e3439fc4-7771-443d-84a6-41083ea80819 -- Generated UUID
         public static string PluginID => "BFF179A472A84D8D9DA6640346C61102";
-
-        /// <summary>
-        /// Name of the plugin.
-        /// </summary>
         public string Name => "SVGL";
-
-        /// <summary>
-        /// Description of the plugin.
-        /// </summary>
         public string Description => "SVGL Description";
-
         private PluginInitContext Context { get; set; }
-
         private string IconPath { get; set; }
-
         private bool Disposed { get; set; }
 
 
@@ -57,45 +39,13 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         {
             Log.Info($"SVGL Query: Search='{query.Search}'", GetType());
             var results = new List<Result>();
-            //var search = query.Search;
-            //var apiClient = new MyApiClients();
 
 
             if (string.IsNullOrWhiteSpace(query.Search))
             {
-                //string cacheKey = "SVGL_DEFAULT_RESULTS";
-                //var CachedResult = _cache.Get(cacheKey) is List<Result> cached;
-
-                //if (_cache.Get(cacheKey) is List<Result>)
-                //{
-                //    var cachedResults = _cache.Get(cacheKey) as List<Result>;
-                //    return cachedResults;
-                //}
-                //if (_cache.Get(DefaultCacheKey) is List<Result> cachedResults)
-                //{
-                //    return cachedResults;
-                //}    results.Add(new Result
-                //results.Add(new Result
-                //{
-                //    Title = "Loading...",
-                //    SubTitle = "Please wait while we fetch the data...",
-                //    IcoPath = IconPath, // You can use an icon that indicates loading
-                //});
-
                 var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(), cachingOption);
                 var slicedResults = cachedResults.Slice(0, 15);
 
-                //results.Clear();
-                //foreach (var result in cachedResults)
-                //{
-                //    Log.Info($"Cached result item: Title = {result.Title}, SubTitle = {result.SubTitle}, Entire Data = {result}", GetType());
-                //}
-
-
-
-
-                //return _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(query.Search));
-                //return cachedResults;
                 foreach (var result in slicedResults)
                 {
                     results.Add(new Result
@@ -105,62 +55,10 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         IcoPath = result.IcoPath,
                         Score = result.Score,
                         ContextData = result.ContextData,
-                        //Action = result.Action,
-                        //QueryTextDisplay = query.ActionKeyword // Use only the action keyword
                     });
                 }
 
                 return results;
-
-                //try
-                //{
-                //    // Make this truly, async
-                //    var svgs = Task.Run(async () => await apiClient.GetSVGsByLimit(10)).Result;
-                //    Log.Info($"Fetched {svgs.Count} SVGs", GetType());
-                //    foreach (var svg in svgs)
-                //    {
-                //        string routeUrl = svg.Route switch
-                //        {
-                //            ThemeString s => s.Route,
-                //            ThemeObject o => o.Route.Dark,
-                //            _ => string.Empty
-                //        };
-
-                //        if (string.IsNullOrEmpty(routeUrl)) continue;
-
-                //        Log.Info($"Added: {svg.Title} | URL: {routeUrl}", GetType());
-                //        results.Add(new Result
-                //        {
-                //            Title = svg.Title,
-                //            SubTitle = $"Category {routeUrl} | URL {routeUrl}",
-                //            IcoPath = "Images/svgl.light.png",
-                //            Score = 50,
-                //            ContextData = routeUrl,
-                //            ToolTipData = new ToolTipData("Route", $"Link for the Actual SVG: {routeUrl}"),
-
-                //        });
-
-                //    }
-                //    // Caching after all the values are inserted in results by looping them over.
-                //    if (results.Count > 0)
-                //    {
-                //        _cache.Add(DefaultCacheKey, results, new CacheItemPolicy
-                //        {
-                //            AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(CacheExpirationInMinutes)
-                //        });
-                //        Log.Debug($"Cached {results.Count} items", GetType());
-                //    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    results.Add(new Result
-                //    {
-                //        Title = "Error Fetching SVGs",
-                //        SubTitle = ex.Message,
-                //        IcoPath = IconPath,
-                //        Score = 0
-                //    });
-                //}
             }
 
             return results;
@@ -172,9 +70,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             try
             {
                 var apiClient = new MyApiClients();
-                //var svgs = Task.Run(() => apiClient.GetAllSVGs()).GetAwaiter().GetResult();
                 var svgs = apiClient.GetAllSVGs().Result;
-                //var svgs = await apiClient.GetAllSVGs();
 
                 foreach (var svg in svgs)
                 {
@@ -191,46 +87,10 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     {
                         Title = svg.Title,
                         SubTitle = svg.Category.ToString(),
-                        IcoPath = "Images/svgl.light.png",
+                        IcoPath = IconPath,
                         Score = 100,
                         ContextData = svg,
                     });
-
-                    //if (svg.Route is ThemeString routeStr)
-                    //{
-                    //    results.Add(new Result
-                    //    {
-                    //        Title = svg.Title,
-                    //        SubTitle = $"Category: {svg.Category} | URL: {routeStr.Route}",
-                    //        IcoPath = "Images/svgl.light.png",
-                    //        Score = 100,
-                    //        ContextData = svg,
-                    //        Action = _ => CopyToClipboard(routeStr.Route)
-                    //    });
-                    //}
-                    //else if (svg.Route is ThemeObject routeObj)
-                    //{
-                    //    results.Add(new Result
-                    //    {
-                    //        Title = svg.Title,
-                    //        SubTitle = $"Category: {svg.Category} | Light URL: {routeObj.Route.Light} | Dark URL: {routeObj.Route.Dark}",
-                    //        IcoPath = "Images/svgl.light.png",
-                    //        Score = 100,
-                    //        ContextData = routeObj,
-                    //        Action = _ => CopyToClipboard(routeObj.Route.Dark)
-                    //    });
-                    //}
-                    //results.Add(new Result
-                    //{
-                    //    Title = svg.Title,
-                    //    SubTitle = $"Category: {svg.Category} | URL: {routeUrl}",
-                    //    IcoPath = "Images/svgl.light.png",
-                    //    Score = 100,
-                    //    ContextData = routeUrl,
-                    //    //QueryTextDisplay = search,
-                    //    Action = _ => CopyToClipboard(routeUrl)
-                    //});
-
                 }
                 Log.Info($"Result from FetchDefaultTypes Class: {results}", GetType());
             }
@@ -249,8 +109,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         }
 
 
-
-        // The Delayed Query Class
         public List<Result> Query(Query query, bool isDelayed)
         {
 
@@ -333,36 +191,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                                     ContextData = svg,
                                     Score = 100
                                 });
-
-                            //if (svg.Route is ThemeString routeString)
-                            //{
-                            //    results.Add(
-                            //            new Result
-                            //            {
-                            //                Title = svg.Title,
-                            //                SubTitle = $"Category: {svg.Category?.ToString()} | Actual URL: {routeString.Route}",
-                            //                IcoPath = "Images/svgl.light.png",
-                            //                Score = 100,
-                            //                ContextData = routeString,
-                            //                Action = _ => CopyToClipboard(routeString.Route),
-                            //            }
-
-                            //    );
-                            //};
-
-                            //if (svg.Route is ThemeObject routeObject)
-                            //{
-                            //    results.Add(
-                            //        new Result
-                            //        {
-                            //            Title = svg.Title,
-                            //            SubTitle = $"Category: {svg.Category?.ToString()} | Light URL: {routeObject.Route.Light} | Dark URL: {routeObject.Route.Dark}",
-                            //            Score = 100,
-                            //            IcoPath = IconPath,
-                            //            ContextData = routeObject,
-                            //        });
-                            //};
-
                         }
                     }
                 }
@@ -376,72 +204,31 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         Score = 0
                     });
                 }
-            }
-            ;
+            };
 
             return results;
 
         }
 
 
-        private Result CreateNoResultsFound(string Title = "No SVGs Available", string subTitle = "Could not fetch deafult SVG list", int Score = 100)
+        // Context Menu Config from each result
+        public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
-            return new Result
+            if (selectedResult?.ContextData is INavigateToBrowserData browserData)
             {
-                Title = Title,
-                SubTitle = subTitle,
-                IcoPath = IconPath,
-                Score = Score,
-                Action = _ =>
+                return browserData.Identifier switch
                 {
-                    Context.API.ShowMsg("Info", "No SVG found for your search.");
-                    return false;
-                }
-            };
-        }
-
-        private List<ContextMenuResult> HandleNavigateToBrowserDataResult(INavigateToBrowserData data, string constantName, string url)
-        {
-            return new List<ContextMenuResult>
-        {
-            Utils.GetContextMenuResult(new IGetContextMenuResult {
-                Title = Constants.OpenInBrowserMessage,
-                Glyph = "\xE8A7",
-                AcceleratorKey = Key.Enter,
-                CustomAction = _ => OpenURL(url, constantName)
-            })
-        };
-        }
-
-        private bool OpenURL(string url, string constantName)
-        {
-            try
-            {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = url,
-                    UseShellExecute = true
-                });
-                return true;
+                    Constants.RequestLogo => HandleNavigateToBrowserDataResult(browserData, Constants.RequestLogo, $"{Constants.RequestLogoURL}+{Utils.CapitalizeFirstLetter(browserData.Search)}"),
+                    Constants.SubmitLogo => HandleNavigateToBrowserDataResult(browserData, Constants.SubmitLogo, Constants.SubmitLogoURL),
+                    _ => new List<ContextMenuResult>()
+                };
             }
-            catch (Exception ex)
+            if (selectedResult?.ContextData is SVGL svg)
             {
-                Context.API.ShowMsg("Error", $"Failed to open URL {constantName}: {ex.Message}");
-                return false;
+                return HandleSvgRoutes(svg.Route, svg.Wordmark);
             }
-        }
 
-        private ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content,
-    Key key, ModifierKeys modifiers = ModifierKeys.None)
-        {
-            return Utils.GetContextMenuResult(new IGetContextMenuResult
-            {
-                Title = title,
-                Glyph = glyph,
-                AcceleratorKey = key,
-                AcceleratorModifiers = modifiers,
-                CopyContent = content
-            });
+            return new List<ContextMenuResult>();
         }
 
         private List<ContextMenuResult> HandleSvgRoutes(ThemeBase route, ThemeBase wordmark)
@@ -477,27 +264,68 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             return results;
         }
 
-        // Context Menu Config from each result
-        public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
-        {
-            if (selectedResult?.ContextData is INavigateToBrowserData browserData)
-            {
-                return browserData.Identifier switch
-                {
-                    Constants.RequestLogo => HandleNavigateToBrowserDataResult(browserData, Constants.RequestLogo, $"{Constants.RequestLogoURL}+{Utils.CapitalizeFirstLetter(browserData.Search)}"),
-                    Constants.SubmitLogo => HandleNavigateToBrowserDataResult(browserData, Constants.SubmitLogo, Constants.SubmitLogoURL),
-                    _ => new List<ContextMenuResult>()
-                };
-            }
-            if (selectedResult?.ContextData is SVGL svg)
-            {
-                return HandleSvgRoutes(svg.Route, svg.Wordmark);
-            }
 
-            return new List<ContextMenuResult>();
+        private bool OpenURL(string url, string constantName)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Context.API.ShowMsg("Error", $"Failed to open URL {constantName}: {ex.Message}");
+                return false;
+            }
+        }
+
+        private ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content,
+    Key key, ModifierKeys modifiers = ModifierKeys.None)
+        {
+            return Utils.GetContextMenuResult(new IGetContextMenuResult
+            {
+                Title = title,
+                Glyph = glyph,
+                AcceleratorKey = key,
+                AcceleratorModifiers = modifiers,
+                CopyContent = content
+            });
         }
 
 
+        private Result CreateNoResultsFound(string Title = "No SVGs Available", string subTitle = "Could not fetch deafult SVG list", int Score = 100)
+        {
+            return new Result
+            {
+                Title = Title,
+                SubTitle = subTitle,
+                IcoPath = IconPath,
+                Score = Score,
+                Action = _ =>
+                {
+                    Context.API.ShowMsg("Info", "No SVG found for your search.");
+                    return false;
+                }
+            };
+        }
+
+
+        private List<ContextMenuResult> HandleNavigateToBrowserDataResult(INavigateToBrowserData data, string constantName, string url)
+        {
+            return new List<ContextMenuResult>
+        {
+            Utils.GetContextMenuResult(new IGetContextMenuResult {
+                Title = Constants.OpenInBrowserMessage,
+                Glyph = "\xE8A7",
+                AcceleratorKey = Key.Enter,
+                CustomAction = _ => OpenURL(url, constantName)
+            })
+        };
+        }
 
         /// <summary>
         /// Initialize the plugin with the given <see cref="PluginInitContext"/>.
