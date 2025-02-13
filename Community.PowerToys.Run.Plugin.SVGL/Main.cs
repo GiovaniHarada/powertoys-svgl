@@ -22,19 +22,13 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         private readonly MyApiClients apiClient = new MyApiClients();
 
         // Caching variables
+        private const string DefaultCacheKey = "SVGL_AllResults";
         private readonly IAppCache _cache = new CachingService();
         private static MemoryCacheEntryOptions cachingOption = new MemoryCacheEntryOptions()
         {
             Priority = CacheItemPriority.NeverRemove
         };
-        private const string DefaultCacheKey = "SVGL_AllResults";
-        //private const int CacheMinutes = 30;
 
-        /// <summary>
-        /// Return a filtered list, based on the given query.
-        /// </summary>
-        /// <param name="query">The query to filter the list.</param>
-        /// <returns>A filtered list, can be empty when nothing was found.</returns>
         public List<Result> Query(Query query)
         {
             Log.Info($"SVGL Query: Search='{query.Search}'", GetType());
@@ -64,54 +58,10 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             return results;
         }
 
-        private List<Result> FetchDefaultResults()
-        {
-            var results = new List<Result>();
-            try
-            {
-                //var apiClient = new MyApiClients();
-                var svgs = apiClient.GetAllSVGs().GetAwaiter().GetResult();
-
-                if (svgs != null)
-                {
-
-                    //foreach (var svg in svgs)
-                    //{
-                    results.AddRange(svgs.Select(svg => new Result
-                    {
-                        Title = svg.Title,
-                        SubTitle = svg.Category.ToString(),
-                        IcoPath = IconPath,
-                        Score = 100,
-                        ContextData = svg,
-                    }));
-                    //}
-                }
-
-                Log.Info($"Fetched {results.Count} SVG results.", GetType());
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error fetching SVGs: {ex}", GetType());
-                results.Add(new Result
-                {
-                    Title = "Error Fetching SVGs",
-                    SubTitle = ex.Message,
-                    IcoPath = IconPath,
-                    Score = 0,
-                });
-            }
-
-            return results.Any() ? results : new List<Result> { CreateNoResultsFound() };
-        }
-
-
         public List<Result> Query(Query query, bool isDelayed)
         {
-
             var results = new List<Result>();
             var search = query.Search;
-            var cachedResult = _cache.Get<List<Result>>(DefaultCacheKey);
 
             INavigateToBrowserData requestLogoData = new INavigateToBrowserData { Identifier = Constants.RequestLogo, Search = query.Search };
             INavigateToBrowserData submitLogoData = new INavigateToBrowserData { Identifier = Constants.SubmitLogo, Search = query.Search };
@@ -121,6 +71,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 Log.Info($"Delayed SVGL Query: Search='{query.Search}'", GetType());
                 try
                 {
+                    var cachedResult = _cache.Get<List<Result>>(DefaultCacheKey);
                     if (cachedResult != null)
                     {
                         var filterResult = cachedResult
@@ -130,7 +81,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                                            .ThenBy(r => r.Title.IndexOf(search, StringComparison.OrdinalIgnoreCase)) // Lastly, ones which contains the search term, earlier index first.
                                            .ToList();
 
-                        if (filterResult.Count == 0)
+                        if (!filterResult.Any())
                         {
                             results.Add(CreateNoResultsFound("No SVG Found", $"Could not found {query.Search} SVG"));
                             results.Add(new Result
@@ -152,46 +103,32 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             });
                         };
 
-                        foreach (var svg in filterResult)
+                        results.AddRange(filterResult.Select(svg => new Result
                         {
-                            results.Add(new Result
-                            {
-                                Title = svg.Title,
-                                SubTitle = svg.SubTitle,
-                                ContextData = svg.ContextData,
-                                Score = 100,
-                                IcoPath = svg.IcoPath
-                            });
-                        }
+                            Title = svg.Title,
+                            SubTitle = svg.SubTitle,
+                            ContextData = svg.ContextData,
+                            Score = 100,
+                            IcoPath = svg.IcoPath
+                        }));
                     }
                     else
                     {
                         var svgs = apiClient.GetSVGFromSource(search).Result;
-                        foreach (var svg in svgs)
-                        {
-                            string routeUrl = svg.Route switch
+                        results.AddRange(svgs.Select(svg =>
+                            new Result
                             {
-                                ThemeString s => s.Route,
-                                ThemeObject o => o.Route.Dark,
-                                _ => string.Empty
-                            };
-
-                            if (string.IsNullOrEmpty(routeUrl)) continue;
-
-                            results.Add(
-                                new Result
-                                {
-                                    Title = svg.Title,
-                                    SubTitle = svg.Category.ToString(),
-                                    IcoPath = IconPath,
-                                    ContextData = svg,
-                                    Score = 100
-                                });
-                        }
+                                Title = svg.Title,
+                                SubTitle = svg.Category.ToString(),
+                                IcoPath = IconPath,
+                                ContextData = svg,
+                                Score = 100
+                            }));
                     }
                 }
                 catch (Exception ex)
                 {
+                    Log.Error($"Error occurred in Query method: {ex}", GetType());
                     results.Add(new Result
                     {
                         Title = "Error Fetching SVGs",
@@ -225,6 +162,43 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             }
 
             return new List<ContextMenuResult>();
+        }
+
+        private List<Result> FetchDefaultResults()
+        {
+            var results = new List<Result>();
+            try
+            {
+                var svgs = apiClient.GetAllSVGs().GetAwaiter().GetResult();
+
+                if (svgs != null)
+                {
+
+                    results.AddRange(svgs.Select(svg => new Result
+                    {
+                        Title = svg.Title,
+                        SubTitle = svg.Category.ToString(),
+                        IcoPath = IconPath,
+                        Score = 100,
+                        ContextData = svg,
+                    }));
+                }
+
+                Log.Info($"Fetched {results.Count} SVG results.", GetType());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error fetching SVGs: {ex}", GetType());
+                results.Add(new Result
+                {
+                    Title = "Error Fetching SVGs",
+                    SubTitle = ex.Message,
+                    IcoPath = IconPath,
+                    Score = 0,
+                });
+            }
+
+            return results.Any() ? results : new List<Result> { CreateNoResultsFound() };
         }
 
         private List<ContextMenuResult> HandleSvgRoutes(ThemeBase route, ThemeBase wordmark)
@@ -318,8 +292,8 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             Context.API.ThemeChanged += OnThemeChanged;
             UpdateIconPath(Context.API.GetCurrentTheme());
 
-            Log.Info("SVGL plugin initialized successfully", GetType()); // Using Wox.Plugin.Logger
-            Log.Info("SVGL PLUGIN LOADED", GetType()); // For debug builds
+            Log.Info("SVGL plugin initialized successfully", GetType());
+            Log.Info("SVGL PLUGIN LOADED", GetType());
         }
 
         /// <summary>
