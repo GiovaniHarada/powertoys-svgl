@@ -237,27 +237,27 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
             if (route is ThemeString routeStr)
             {
-                results.Add(CreateCopyMenuItem(Constants.CopySVGLogoMessage, "\xE8C8",
+                results.Add(Utils.CreateCopyMenuItem(Constants.CopySVGLogoMessage, "\xE8C8",
                     routeStr.Route, Key.Enter));
             }
             else if (route is ThemeObject routeObj)
             {
-                results.Add(CreateCopyMenuItem(Constants.CopyLightThemeSVGLogoMessage, "\xE706",
+                results.Add(Utils.CreateCopyMenuItem(Constants.CopyLightThemeSVGLogoMessage, "\xE706",
                     routeObj.Route.Light, Key.Enter));
-                results.Add(CreateCopyMenuItem(Constants.CopyDarkThemeSVGLogoMessage, "\xE708",
+                results.Add(Utils.CreateCopyMenuItem(Constants.CopyDarkThemeSVGLogoMessage, "\xE708",
                     routeObj.Route.Dark, Key.Enter, ModifierKeys.Control));
             }
 
             if (wordmark is ThemeString wordStr)
             {
-                results.Add(CreateCopyMenuItem(Constants.CopySVGWordmarkMessage, "\xE8D2",
+                results.Add(Utils.CreateCopyMenuItem(Constants.CopySVGWordmarkMessage, "\xE8D2",
                     wordStr.Route, Key.Enter, ModifierKeys.Control));
             }
             else if (wordmark is ThemeObject wordObj)
             {
-                results.Add(CreateCopyMenuItem(Constants.CopyLightThemeSVGWordmarMessage, "\xE706",
+                results.Add(Utils.CreateCopyMenuItem(Constants.CopyLightThemeSVGWordmarMessage, "\xE706",
                     wordObj.Route.Light, Key.Enter, ModifierKeys.Shift));
-                results.Add(CreateCopyMenuItem(Constants.CopyDarkThemeSVGWordmarMessage, "\xE8D3",
+                results.Add(Utils.CreateCopyMenuItem(Constants.CopyDarkThemeSVGWordmarMessage, "\xE8D3",
                     wordObj.Route.Dark, Key.Enter, ModifierKeys.Control | ModifierKeys.Shift));
             }
 
@@ -283,20 +283,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             }
         }
 
-        private ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content,
-    Key key, ModifierKeys modifiers = ModifierKeys.None)
-        {
-            return Utils.GetContextMenuResult(new IGetContextMenuResult
-            {
-                Title = title,
-                Glyph = glyph,
-                AcceleratorKey = key,
-                AcceleratorModifiers = modifiers,
-                CopyContent = content
-            });
-        }
-
-
         private Result CreateNoResultsFound(string Title = "No SVGs Available", string subTitle = "Could not fetch deafult SVG list", int Score = 100)
         {
             return new Result
@@ -312,7 +298,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 }
             };
         }
-
 
         private List<ContextMenuResult> HandleNavigateToBrowserDataResult(INavigateToBrowserData data, string constantName, string url)
         {
