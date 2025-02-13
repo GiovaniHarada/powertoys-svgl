@@ -69,10 +69,10 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             var results = new List<Result>();
             try
             {
-                var apiClient = new MyApiClients();
-                var svgs = apiClient.GetAllSVGs().Result;
+                //var apiClient = new MyApiClients();
+                var svgs = apiClient.GetAllSVGs().GetAwaiter().GetResult();
 
-                foreach (var svg in svgs)
+                if (svgs != null)
                 {
                     string routeUrl = svg.Route switch
                     {
@@ -81,21 +81,24 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         _ => string.Empty
                     };
 
-                    if (string.IsNullOrWhiteSpace(routeUrl)) continue;
-
-                    results.Add(new Result
+                    //foreach (var svg in svgs)
+                    //{
+                    results.AddRange(svgs.Select(svg => new Result
                     {
                         Title = svg.Title,
                         SubTitle = svg.Category.ToString(),
                         IcoPath = IconPath,
                         Score = 100,
                         ContextData = svg,
-                    });
+                    }));
+                    //}
                 }
-                Log.Info($"Result from FetchDefaultTypes Class: {results}", GetType());
+
+                Log.Info($"Fetched {results.Count} SVG results.", GetType());
             }
             catch (Exception ex)
             {
+                Log.Error($"Error fetching SVGs: {ex}", GetType());
                 results.Add(new Result
                 {
                     Title = "Error Fetching SVGs",
@@ -105,7 +108,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 });
             }
 
-            return results.Count > 0 ? results : [CreateNoResultsFound()];
+            return results.Any() ? results : new List<Result> { CreateNoResultsFound() };
         }
 
 
