@@ -12,7 +12,8 @@ namespace Community.PowerToys.Run.Plugin.SVGL;
 public class MyApiClients
 {
     private static readonly HttpClient _httpClient = new HttpClient();
-
+    private static readonly string pattern = @"library/(.*?)(\.|$)";
+    private static readonly Regex SVGRegex = new Regex(pattern, RegexOptions.Compiled);
 
     public async Task<List<SVGL>> GetSVGFromSource(string query)
     {
@@ -37,15 +38,23 @@ public class MyApiClients
 
     public async Task<string> GetSVGContent(string url)
     {
-        string pattern = @"library/(.*?)(\.|$)";
+        if (string.IsNullOrEmpty(url))
+        {
+            throw new ArgumentNullException($"URL cannot be empty or empty.", nameof(url));
+        }
 
-        Match match = Regex.Match(url, pattern);
+        Match match = SVGRegex.Match(url);
 
-        string extractedSVGName = match.Success ? match.Groups[1].Value : ""; //Todo: Throw Exception, if match.Success Fails
-        string fixedURL = Constants.SVGLBaseURL + extractedSVGName + ".svg";
-        Log.Info($"Fixed URL: {fixedURL}", GetType());
+        if (!match.Success)
+        {
+            throw new ArgumentException($"The URL does not contain a valid SVG identifier.", nameof(url));
+        }
 
-        HttpResponseMessage response = await _httpClient.GetAsync(fixedURL);
+        string extractedSVGName = match.Groups[1].Value;
+        string fullURL = $"{Constants.SVGLBaseURL}{extractedSVGName}.svg";
+        Log.Info($"Fixed URL: {fullURL}", GetType());
+
+        HttpResponseMessage response = await _httpClient.GetAsync(fullURL);
         response.EnsureSuccessStatusCode();
         string data = await response.Content.ReadAsStringAsync();
         return data;
