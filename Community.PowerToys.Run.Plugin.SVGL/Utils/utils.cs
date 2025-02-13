@@ -56,16 +56,4 @@ public class Utils
     {
         return string.IsNullOrEmpty(input) ? input : char.ToUpper(input[0]) + input[1..];
     }
-
-    public static ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content, Key key, ModifierKeys modifier = ModifierKeys.None)
-    {
-        return GetContextMenuResult(new IGetContextMenuResult
-        {
-            Title = title,
-            Glyph = glyph,
-            AcceleratorKey = key,
-            AcceleratorModifiers = modifier,
-            CopyContent = content
-        });
-    }
 }
