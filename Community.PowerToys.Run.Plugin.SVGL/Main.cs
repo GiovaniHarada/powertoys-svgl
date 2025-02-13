@@ -255,7 +255,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             }
             else if (wordmark is ThemeObject wordObj)
             {
-                results.Add(Utils.CreateCopyMenuItem(Constants.CopyLightThemeSVGWordmarMessage, "\xE706",
+                results.Add(Utils.CreateCopyMenuItem(Constants.CopyLightThemeSVGWordmarMessage, "\xE8D2",
                     wordObj.Route.Light, Key.Enter, ModifierKeys.Shift));
                 results.Add(Utils.CreateCopyMenuItem(Constants.CopyDarkThemeSVGWordmarMessage, "\xE8D3",
                     wordObj.Route.Dark, Key.Enter, ModifierKeys.Control | ModifierKeys.Shift));
