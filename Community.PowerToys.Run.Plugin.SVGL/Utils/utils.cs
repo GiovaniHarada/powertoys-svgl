@@ -21,10 +21,20 @@ public class Utils
 
     public static bool CopySVGContent(string svg)
     {
-        //var apiClient = new MyApiClients();
         var content = Task.Run(async () => await _apiClient.GetSVGContent(svg)).Result;
         CopyToClipboard(content);
         return true;
+    }
+    public static ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content, Key key, ModifierKeys modifier = ModifierKeys.None)
+    {
+        return GetContextMenuResult(new IGetContextMenuResult
+        {
+            Title = title,
+            Glyph = glyph,
+            AcceleratorKey = key,
+            AcceleratorModifiers = modifier,
+            CopyContent = content
+        });
     }
 
     public static ContextMenuResult GetContextMenuResult(IGetContextMenuResult args)
