@@ -21,7 +21,7 @@
 - [ ] Add a reload/re-validate cache command. Goal: In order to get latest results from the API, even though the cache gets re-validated whenever we start a new PowerToys Session but having a command to do is beneficial. Since, SVGL gets updated frequently, having a command which could just re-validate cache with starting a new session is nice to have.
 - [x] Refactor Codebase (Seperate Types, API Functions, etc).
 
-### Later Feature after First Release (Possibly 0.0.2)
+### Improvements for later versions
 - [ ] Better Icon Previewing (Using the Actual SVG as Preview for that result).
 - [ ] File based caching for results and time based re-validation.
 - [ ] Add React SVG Commponent Function.
