@@ -12,7 +12,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 {
     public class Main : IPlugin, IContextMenu, IDisposable, IDelayedExecutionPlugin
     {
-        public static string PluginID => "BFF179A472A84D8D9DA6640346C61102";
+        public static string PluginID => "6401d691-f104-4a1b-9558-087abe8b84a2";
         public string Name => "SVGL";
         public string Description => "SVGL Description";
         private PluginInitContext Context { get; set; }
