@@ -19,7 +19,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         private string IconPath { get; set; }
         private bool Disposed { get; set; }
 
-
+        private readonly MyApiClients apiClient = new MyApiClients();
 
         // Caching variables
         private readonly IAppCache _cache = new CachingService();
@@ -74,12 +74,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
                 if (svgs != null)
                 {
-                    string routeUrl = svg.Route switch
-                    {
-                        ThemeString s => s.Route,
-                        ThemeObject o => o.Route.Dark ?? string.Empty,
-                        _ => string.Empty
-                    };
 
                     //foreach (var svg in svgs)
                     //{
@@ -117,7 +111,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
             var results = new List<Result>();
             var search = query.Search;
-            var apiClient = new MyApiClients();
             var cachedResult = _cache.Get<List<Result>>(DefaultCacheKey);
 
             INavigateToBrowserData requestLogoData = new INavigateToBrowserData { Identifier = Constants.RequestLogo, Search = query.Search };
