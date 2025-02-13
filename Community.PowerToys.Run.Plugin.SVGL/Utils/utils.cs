@@ -25,6 +25,7 @@ public class Utils
         CopyToClipboard(content);
         return true;
     }
+
     public static ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content, Key key, ModifierKeys modifier = ModifierKeys.None)
     {
         return GetContextMenuResult(new IGetContextMenuResult
