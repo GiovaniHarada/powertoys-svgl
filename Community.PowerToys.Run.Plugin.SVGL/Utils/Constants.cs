@@ -23,4 +23,7 @@ public static class Constants
 
     public const string CopyLightThemeSVGWordmarMessage = "Copy Light Theme Wordmark (Shift + Enter)";
     public const string CopyDarkThemeSVGWordmarMessage = "Copy Dark Theme Wordmark (Ctrl + Shift + Enter)";
+
+    public const string NoInternet = "No Internet Connection";
+    public const string NoInternetSubTitle = "Please check your internet connection and try again.";
 }

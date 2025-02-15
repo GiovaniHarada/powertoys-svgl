@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Windows.Input;
 using LazyCache;
 using ManagedCommon;
@@ -34,25 +35,58 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             Log.Info($"SVGL Query: Search='{query.Search}'", GetType());
             var results = new List<Result>();
 
-
             if (string.IsNullOrWhiteSpace(query.Search))
             {
-                var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(), cachingOption);
-                var slicedResults = cachedResults.Slice(0, 15);
-
-                foreach (var result in slicedResults)
+                try
                 {
-                    results.Add(new Result
+                    var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(), cachingOption);
+
+                    if (cachedResults.Any(r => r.Title == Constants.NoInternet) && Utils.IsInternetAvailable())
+                    {
+                        _cache.Remove(DefaultCacheKey);
+                        Log.Info("Internet Connection Restored. Cache invalidated", GetType());
+                        cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(), cachingOption);
+                        Log.Info("Cache invalidated successfully: ", GetType());
+                    }
+
+
+                    if (cachedResults.Any(r => r.Title == Constants.NoInternet))
+                    {
+                        results.AddRange(cachedResults.Select(result => new Result
+                        {
+                            Title = result.Title,
+                            SubTitle = result.SubTitle,
+                            IcoPath = result.IcoPath,
+                            Score = result.Score,
+                            ContextData = result.ContextData
+                        }));
+
+                        return results;
+                    }
+
+                    var slicedResults = cachedResults.Slice(0, 15);
+                    results.AddRange(slicedResults.Select(result => new Result
                     {
                         Title = result.Title,
                         SubTitle = result.SubTitle,
                         IcoPath = result.IcoPath,
                         Score = result.Score,
                         ContextData = result.ContextData,
+                    }));
+
+
+                    return results;
+                }
+                catch (Exception ex)
+                {
+                    results.Add(new Result
+                    {
+                        Title = "Error Fetching SVGs",
+                        SubTitle = ex.Message,
+                        IcoPath = IconPath,
+                        Score = 0,
                     });
                 }
-
-                return results;
             }
 
             return results;
@@ -71,17 +105,33 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 Log.Info($"Delayed SVGL Query: Search='{query.Search}'", GetType());
                 try
                 {
-                    var cachedResult = _cache.Get<List<Result>>(DefaultCacheKey);
-                    if (cachedResult != null)
+                    var cachedResults = _cache.Get<List<Result>>(DefaultCacheKey);
+
+                    if (cachedResults.Any(r => r.Title == Constants.NoInternet))
                     {
-                        var filterResult = cachedResult
+                        results.AddRange(cachedResults.Select(result => new Result
+                        {
+                            Title = result.Title,
+                            SubTitle = result.SubTitle,
+                            IcoPath = result.IcoPath,
+                            Score = result.Score,
+                            ContextData = result.ContextData
+                        }));
+                        return results;
+                    }
+
+                    if (cachedResults != null)
+                    {
+                        var filterResults = cachedResults
                                            .Where(r => r.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
                                            .OrderByDescending(r => string.Equals(r.Title, search, StringComparison.OrdinalIgnoreCase)) // Exact match first
                                            .ThenByDescending(r => r.Title.StartsWith(search, StringComparison.OrdinalIgnoreCase)) // Then StartsWith Second
                                            .ThenBy(r => r.Title.IndexOf(search, StringComparison.OrdinalIgnoreCase)) // Lastly, ones which contains the search term, earlier index first.
                                            .ToList();
+                        //StringMatcher.FuzzySearch(search, r.Title)
+                        //var filteredResults = cachedResult.Select(r => StringMatcher.FuzzySearch(search, r.Title)).ToList();
 
-                        if (!filterResult.Any())
+                        if (!filterResults.Any())
                         {
                             results.Add(CreateNoResultsFound("No SVG Found", $"Could not found {query.Search} SVG"));
                             results.Add(new Result
@@ -103,7 +153,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                             });
                         };
 
-                        results.AddRange(filterResult.Select(svg => new Result
+                        results.AddRange(filterResults.Select(svg => new Result
                         {
                             Title = svg.Title,
                             SubTitle = svg.SubTitle,
@@ -173,7 +223,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL
 
                 if (svgs != null)
                 {
-
                     results.AddRange(svgs.Select(svg => new Result
                     {
                         Title = svg.Title,
@@ -182,9 +231,22 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                         Score = 100,
                         ContextData = svg,
                     }));
+                    return results;
                 }
 
                 Log.Info($"Fetched {results.Count} SVG results.", GetType());
+            }
+            catch (HttpRequestException ex)
+            {
+                Log.Error($"Network Error fetching SVGs: {ex}", GetType());
+                results.Add(new Result
+                {
+                    Title = Constants.NoInternet,
+                    SubTitle = Constants.NoInternetSubTitle,
+                    IcoPath = IconPath,
+                    Score = 0,
+                });
+                return results;
             }
             catch (Exception ex)
             {
@@ -196,6 +258,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     IcoPath = IconPath,
                     Score = 0,
                 });
+                return results;
             }
 
             return results.Any() ? results : new List<Result> { CreateNoResultsFound() };
