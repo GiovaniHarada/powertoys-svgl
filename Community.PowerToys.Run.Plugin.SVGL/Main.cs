@@ -69,6 +69,23 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             if (isDelayed && !string.IsNullOrEmpty(search))
             {
                 Log.Info($"Delayed SVGL Query: Search='{query.Search}'", GetType());
+
+                if (Constants.RefreshCacheCommand.StartsWith(search, StringComparison.OrdinalIgnoreCase) | search.Contains(Constants.RefreshCacheCommand, StringComparison.OrdinalIgnoreCase) | search.StartsWith("--"))
+                {
+                    results.Add(new Result
+                    {
+                        Title = "Refresh Cached Data",
+                        SubTitle = "Force cache refresh to retrieve the latest data from the source.",
+                        IcoPath = IconPath,
+                        Score = 100,
+                        Action = _ =>
+                        {
+                            _cache.Remove(DefaultCacheKey);
+                            return true;
+                        }
+                    });
+                    return results;
+                }
                 try
                 {
                     var cachedResult = _cache.Get<List<Result>>(DefaultCacheKey);
