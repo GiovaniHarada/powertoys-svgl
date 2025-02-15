@@ -26,6 +26,4 @@ public static class Constants
 
     public const string NoInternet = "No Internet Connection";
     public const string NoInternetSubTitle = "Please check your internet connection and try again.";
-
-    public const string RefreshCacheCommand = "--refresh";
 }
