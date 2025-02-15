@@ -1,4 +1,4 @@
-## Roadmap
+﻿## Roadmap
 
 ### Version 0.0.1
 - [x] Add Debounce API Calls from Search
@@ -15,10 +15,10 @@
 - [x] Caching for Searched Results.
 - [x] Improve Search Results by adding some clause i.e perfect match, title startsWiths search query and title contains search query in earlier indexes.
 - [ ] Write Unit Tests for the Codebase.
-- [ ] Handle Error/Exception, when fetching actual SVG Code (Especially for tRPC's dark themed Wordmark SVG, where there's a error from SVGL's side).
+- [x] Handle Error/Exception, when fetching actual SVG Code (Especially for tRPC's dark themed Wordmark SVG, where there's a error from SVGL's side).
 - [x] Show releavant context menu options for request logo and submit a logo result.
-- [ ] Add Loading State/Result, when fetching for the first time.
-- [ ] Add a reload/re-validate cache command. Goal: In order to get latest results from the API, even though the cache gets re-validated whenever we start a new PowerToys Session but having a command to do is beneficial. Since, SVGL gets updated frequently, having a command which could just re-validate cache with starting a new session is nice to have.
+- [x] Add a reload/re-validate cache command. Goal: In order to get latest results from the API, even though the cache gets re-validated whenever we start a new PowerToys Session but having a command to do is beneficial. Since, SVGL gets updated frequently, having a command which could just re-validate cache with starting a new session is nice to have.
+- [x] No Internet Connection Exception Handling and auto detect when internet connection is back and fetched from API, rather than showing No Internet Connection from cache.
 - [x] Refactor Codebase (Seperate Types, API Functions, etc).
 
 ### Improvements for later versions
@@ -28,4 +28,5 @@
 - [ ] Add Caching for SVG Code.
 - [ ] Implement better searching i.e Fuzzy Search
 - [ ] Improve `Types.cs`, since it's not that good for sure.
+- [ ] Add Loading State/Result, when fetching for the first time. (New version of Powertoys will bring this feature🤞)
 
