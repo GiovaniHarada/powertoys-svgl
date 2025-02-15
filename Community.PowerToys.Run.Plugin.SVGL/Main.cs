@@ -109,7 +109,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                     results.Add(new Result
                     {
                         Title = "Refresh Cached Data",
-                        SubTitle = "Force cache refresh to retrieve the latest data from the source.",
+                        SubTitle = "Force a cache refresh to retrieve the latest data from the source. Note: The next plugin initialization may take a few milliseconds as the cache is cleared.",
                         IcoPath = IconPath,
                         Score = 100,
                         Action = _ =>
