@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Wox.Plugin;
@@ -56,5 +58,17 @@ public class Utils
     public static string CapitalizeFirstLetter(string input)
     {
         return string.IsNullOrEmpty(input) ? input : char.ToUpper(input[0]) + input[1..];
+    }
+
+    public static bool IsInternetAvailable()
+    {
+        try
+        {
+            using (var client = new HttpClient())
+            using (var response = client.GetAsync("https://www.google.com/").Result)
+                return response.IsSuccessStatusCode;
+
+        }
+        catch (Exception ex) { return false; }
     }
 }
