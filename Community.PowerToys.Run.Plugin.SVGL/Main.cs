@@ -104,7 +104,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
             {
                 Log.Info($"Delayed SVGL Query: Search='{query.Search}'", GetType());
 
-                if (Constants.RefreshCacheCommand.StartsWith(search, StringComparison.OrdinalIgnoreCase) | search.Contains(Constants.RefreshCacheCommand, StringComparison.OrdinalIgnoreCase) | search.StartsWith("--"))
+                if (search.StartsWith("--"))
                 {
                     results.Add(new Result
                     {
