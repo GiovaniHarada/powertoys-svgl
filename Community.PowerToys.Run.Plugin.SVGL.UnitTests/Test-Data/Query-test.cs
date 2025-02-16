@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Wox.Plugin;
-namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests.Test_Data;
 
+
+namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests;
 public static class QueryTestData
 {
     public static List<Result> GoogleData()

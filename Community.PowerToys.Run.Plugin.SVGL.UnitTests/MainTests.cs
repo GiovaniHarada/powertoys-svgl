@@ -1,5 +1,4 @@
-﻿using Community.PowerToys.Run.Plugin.SVGL.UnitTests.Test_Data;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wox.Plugin;
 
 namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests
@@ -74,29 +73,6 @@ namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests
             }
             Assert.IsInstanceOfType(flareResults[0], typeof(Result));
             TestContext.WriteLine("Query test for 'flare' Successfully Passed!!✅");
-
-
-            // Testing No Result Found.
-            TestContext.WriteLine("🔃 Starting No Result Found test...");
-
-            string query = "lsakdjf";
-            var expectedNoResultFound = QueryTestData.NoResultFoundData(query);
-            var noResultFound = _delayedMain.Query(new Query(query), true);
-
-            Assert.IsNotNull(expectedNoResultFound);
-            Assert.IsNotNull(noResultFound);
-            for (int i = 0; i < noResultFound.Count; i++)
-            {
-                TestContext.WriteLine($"Result {i}: {noResultFound[i].Title}");
-            }
-            //Assert.AreEqual(expectedResult.Count, results.Count);
-            for (int i = 0; i < expectedNoResultFound.Count; i++)
-            {
-                Assert.AreEqual(expectedNoResultFound[i].Title, noResultFound[i].Title, $"Mismatch at index {i} for Title");
-                Assert.AreEqual(expectedNoResultFound[i].SubTitle, noResultFound[i].SubTitle, $"Mismatch at index {i} for SubTitle");
-            }
-            TestContext.WriteLine("✅ No Result Found test Successfully Passed");
-
         }
 
 

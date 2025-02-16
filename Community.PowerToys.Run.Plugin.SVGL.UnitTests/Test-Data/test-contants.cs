@@ -1,4 +1,4 @@
-﻿namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests.Test_Data
+﻿namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests
 {
     internal class TestContants
     {
