@@ -20,7 +20,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
         private string IconPath { get; set; }
         private bool Disposed { get; set; }
 
-        private readonly MyApiClients apiClient = new MyApiClients();
+        private readonly IMyApiClient apiClient = new MyApiClients();
 
         // Caching variables
         private const string DefaultCacheKey = "SVGL_AllResults";
@@ -122,7 +122,7 @@ namespace Community.PowerToys.Run.Plugin.SVGL
                 }
                 try
                 {
-                    var cachedResults = _cache.Get<List<Result>>(DefaultCacheKey);
+                    var cachedResults = _cache.GetOrAdd(DefaultCacheKey, () => FetchDefaultResults(), cachingOption);
 
                     if (cachedResults.Any(r => r.Title == Constants.NoInternet))
                     {
