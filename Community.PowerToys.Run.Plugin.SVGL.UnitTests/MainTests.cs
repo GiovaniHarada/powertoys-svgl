@@ -121,6 +121,25 @@ public class MainTests
         TestContext.WriteLine("✅ No Result Found test Successfully Passed");
     }
 
+    [TestMethod]
+    public void LoadContextMenus_should_display_all_menu_options()
+    {
+        TestContext.WriteLine($"🔃 Starting Checking Context Menu for all SVG Variants test...");
+
+        var expectedResult = QueryTestData.GetAllContextMenu();
+        var result = _main.LoadContextMenus(new Result { ContextData = QueryTestData.GetSampleSVGContextData() });
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedResult.Count, result.Count);
+        for (var i = 0; i < expectedResult.Count; i++)
+        {
+            Assert.AreEqual(expectedResult[i].Title, result[i].Title, $"Mismatch at index {i} for Title");
+            Assert.AreEqual(expectedResult[i].Glyph, result[i].Glyph, $"Mismatch at index {i} for Glyph");
+            Assert.AreEqual(expectedResult[i].AcceleratorKey, result[i].AcceleratorKey,
+                $"Mismatch at index {i} for AcceleratorKey");
+            Assert.AreEqual(expectedResult[i].AcceleratorModifiers, result[i].AcceleratorModifiers,
+                $"Mismatch at index {i} for AcceleratorModifiers");
+        }
 
         }
     }
