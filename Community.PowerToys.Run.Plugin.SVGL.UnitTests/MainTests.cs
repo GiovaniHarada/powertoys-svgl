@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wox.Plugin;
 
 namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests;
@@ -94,19 +95,6 @@ public class MainTests
         var expectedNoResultFound = QueryTestData.NoResultFoundData(query);
         var noResultFound = _delayedMain.Query(new Query(query), true);
 
-            Assert.IsNotNull(expectedNoResultFound);
-            Assert.IsNotNull(noResultFound);
-            for (int i = 0; i < noResultFound.Count; i++)
-            {
-                TestContext.WriteLine($"Result {i}: {noResultFound[i].Title}");
-            }
-            //Assert.AreEqual(expectedResult.Count, results.Count);
-            for (int i = 0; i < expectedNoResultFound.Count; i++)
-            {
-                Assert.AreEqual(expectedNoResultFound[i].Title, noResultFound[i].Title, $"Mismatch at index {i} for Title");
-                Assert.AreEqual(expectedNoResultFound[i].SubTitle, noResultFound[i].SubTitle, $"Mismatch at index {i} for SubTitle");
-            }
-            TestContext.WriteLine("✅ No Result Found test Successfully Passed");
         Assert.IsNotNull(expectedNoResultFound);
         Assert.IsNotNull(noResultFound);
         for (var i = 0; i < noResultFound.Count; i++) TestContext.WriteLine($"Result {i}: {noResultFound[i].Title}");
@@ -141,10 +129,31 @@ public class MainTests
                 $"Mismatch at index {i} for AcceleratorModifiers");
         }
 
+        Assert.IsInstanceOfType<ContextMenuResult>(result[0]);
+
+        TestContext.WriteLine("✅ Display All Menu Options test Successfully Passed");
+    }
+
+    [TestMethod]
+    public void LoadContextMenu_should_display_default_menu()
+    {
+        TestContext.WriteLine($"🔃 Starting Test for default Context Menu SVG test...");
+
+        var expectedResult = QueryTestData.GetDefaultContextMenu();
+        var result = _main.LoadContextMenus(new Result() { ContextData = QueryTestData.GetDefaultSVGContextData() });
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedResult.Count, result.Count);
+        for (var i = 0; i < expectedResult.Count; i++)
+        {
+            Assert.AreEqual(expectedResult[i].Title, result[i].Title, $"Mismatch at index {i} for Title");
+            Assert.AreEqual(expectedResult[i].Glyph, result[i].Glyph, $"Mismatch at index {i} for Glyph");
+            Assert.AreEqual(expectedResult[i].AcceleratorKey, result[i].AcceleratorKey,
+                $"Mismatch at index {i} for AcceleratorKey");
         }
+
+        Assert.IsInstanceOfType<List<ContextMenuResult>>(result);
+
+        TestContext.WriteLine("✅ Display Default Menu test Successfully Passed");
     }
 }
-
-
-
-
