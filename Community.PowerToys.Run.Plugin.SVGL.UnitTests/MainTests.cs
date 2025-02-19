@@ -96,10 +96,9 @@ public class MainTests
         var expectedNoResultFound = QueryTestData.GetNoResultsFoundData(query);
         var noResultFound = _delayedMain.Query(new Query(query), true);
 
-        Assert.IsNotNull(expectedNoResultFound);
         Assert.IsNotNull(noResultFound);
-        for (var i = 0; i < noResultFound.Count; i++) TestContext.WriteLine($"Result {i}: {noResultFound[i].Title}");
-        //Assert.AreEqual(expectedResult.Count, results.Count);
+        Assert.AreEqual(expectedNoResultFound.Count, noResultFound.Count);
+
         for (var i = 0; i < expectedNoResultFound.Count; i++)
         {
             Assert.AreEqual(expectedNoResultFound[i].Title, noResultFound[i].Title, $"Mismatch at index {i} for Title");
@@ -119,17 +118,6 @@ public class MainTests
         var result = _main.LoadContextMenus(new Result
         {
             ContextData = QueryTestData.GetFullContextData()
-            // CreateBasicSvgl(2, "Vercel",
-            // new CategoryArray(["Hosting", "Development"]), new ThemeObject(new SvgThemes
-            // {
-            //     Light = "vercel.svg",
-            //     Dark = "vercel-dark.svg"
-            // }), "https://vercel.com",
-            // new ThemeObject(new SvgThemes
-            // {
-            //     Light = "vercel-wordmark.svg",
-            //     Dark = "vercel-wordmark-dark.svg"
-            // }))
         });
 
         Assert.IsNotNull(result);
@@ -158,9 +146,6 @@ public class MainTests
         var result = _main.LoadContextMenus(new Result()
         {
             ContextData = QueryTestData.GetDefaultContextData()
-            // CreateBasicSvgl(5, "Google Drive", new CategoryString("Google"),
-            // new ThemeString("google-drive.svg"), "https://www.google.com"
-            // )
         });
 
         Assert.IsNotNull(result);
@@ -187,13 +172,6 @@ public class MainTests
         var result = _main.LoadContextMenus(new Result
         {
             ContextData = QueryTestData.GetThemedContextData()
-            // CreateBasicSvgl(2, "Clerk",
-            // new CategoryArray(["Software", "Authentication"]), new ThemeObject(new SvgThemes
-            // {
-            //     Light = "clerk.svg",
-            //     Dark = "clerk-dark.svg"
-            // }),
-            // "https://clerk.com")
         });
 
         Assert.IsNotNull(result);
@@ -224,12 +202,6 @@ public class MainTests
         var result = _main.LoadContextMenus(new Result
         {
             ContextData = QueryTestData.GetThemedWordmarkContextData()
-            // CreateBasicSvgl(53, "Trpc", new CategoryString("Framework"),
-            // new ThemeString("trpc.svg"), "https://trpc.com", new ThemeObject(new SvgThemes
-            // {
-            //     Light = "trpc_wordmark_light.svg",
-            //     Dark = "trpc_wordmark_dark.svg"
-            // }))
         });
 
 
