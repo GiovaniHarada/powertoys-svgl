@@ -51,7 +51,6 @@ public class MainTests
         AssertQueryResult(expectedCloudflareResults, actualCloudflareResults, "Cloudflare");
     }
 
-
     [TestMethod]
     [TestCategory("Query")]
     public void Query_WithInvalidSearchTerm_ShouldReturnNoResultFound()
@@ -62,7 +61,6 @@ public class MainTests
 
         AssertQueryResult(expectedResults, actualResults, "No Result");
     }
-
 
     [TestMethod]
     [TestCategory("Context Menu")]
