@@ -36,7 +36,7 @@ public class MainTests
     {
         TestContext.WriteLine("Starting Query test for 'Google'...");
 
-        var expectedGoogleResult = QueryTestData.GoogleData();
+        var expectedGoogleResult = QueryTestData.GetGoogleRelatedResults();
         var results = _delayedMain.Query(new Query("Google"), true);
 
         Assert.IsNotNull(results);
@@ -70,7 +70,7 @@ public class MainTests
         // Testing with different query.
         TestContext.WriteLine("Starting Query test for 'flare'📢...");
 
-        var expectedFlareResult = QueryTestData.FlareData();
+        var expectedFlareResult = QueryTestData.GetCloudflareResults();
         var flareResults = _delayedMain.Query(new Query("flare"), true);
 
         Assert.IsNotNull(flareResults);
@@ -93,7 +93,7 @@ public class MainTests
         TestContext.WriteLine("🔃 Starting No Result Found test...");
 
         const string query = "lsakdjf";
-        var expectedNoResultFound = QueryTestData.NoResultFoundData(query);
+        var expectedNoResultFound = QueryTestData.GetNoResultsFoundData(query);
         var noResultFound = _delayedMain.Query(new Query(query), true);
 
         Assert.IsNotNull(expectedNoResultFound);
@@ -115,8 +115,22 @@ public class MainTests
     {
         TestContext.WriteLine($"🔃 Starting Checking Context Menu for all SVG Variants test...");
 
-        var expectedResult = QueryTestData.GetAllContextMenu();
-        var result = _main.LoadContextMenus(new Result { ContextData = QueryTestData.GetSampleSvgContextData() });
+        var expectedResult = QueryTestData.GetFullContextMenu();
+        var result = _main.LoadContextMenus(new Result
+        {
+            ContextData = QueryTestData.GetFullContextData()
+            // CreateBasicSvgl(2, "Vercel",
+            // new CategoryArray(["Hosting", "Development"]), new ThemeObject(new SvgThemes
+            // {
+            //     Light = "vercel.svg",
+            //     Dark = "vercel-dark.svg"
+            // }), "https://vercel.com",
+            // new ThemeObject(new SvgThemes
+            // {
+            //     Light = "vercel-wordmark.svg",
+            //     Dark = "vercel-wordmark-dark.svg"
+            // }))
+        });
 
         Assert.IsNotNull(result);
         Assert.AreEqual(expectedResult.Count, result.Count);
@@ -141,7 +155,13 @@ public class MainTests
         TestContext.WriteLine($"🔃 Starting Test for default Context Menu SVG test...");
 
         var expectedResult = QueryTestData.GetDefaultContextMenu();
-        var result = _main.LoadContextMenus(new Result() { ContextData = QueryTestData.GetDefaultSvgContextData() });
+        var result = _main.LoadContextMenus(new Result()
+        {
+            ContextData = QueryTestData.GetDefaultContextData()
+            // CreateBasicSvgl(5, "Google Drive", new CategoryString("Google"),
+            // new ThemeString("google-drive.svg"), "https://www.google.com"
+            // )
+        });
 
         Assert.IsNotNull(result);
         Assert.AreEqual(expectedResult.Count, result.Count);
@@ -163,8 +183,18 @@ public class MainTests
     {
         TestContext.WriteLine($"🔃 Starting Test for displaying Themed Context Menu SVG test...");
 
-        var expectedResult = QueryTestData.GetThemedSvgIconContextMenu();
-        var result = _main.LoadContextMenus(new Result { ContextData = QueryTestData.GetThemedSvgIconContextData() });
+        var expectedResult = QueryTestData.GetThemedContextMenu();
+        var result = _main.LoadContextMenus(new Result
+        {
+            ContextData = QueryTestData.GetThemedContextData()
+            // CreateBasicSvgl(2, "Clerk",
+            // new CategoryArray(["Software", "Authentication"]), new ThemeObject(new SvgThemes
+            // {
+            //     Light = "clerk.svg",
+            //     Dark = "clerk-dark.svg"
+            // }),
+            // "https://clerk.com")
+        });
 
         Assert.IsNotNull(result);
         Assert.AreEqual(expectedResult.Count, result.Count);
@@ -190,9 +220,17 @@ public class MainTests
         TestContext.WriteLine(
             $"🔃 Starting Test for displaying One Icon & Two Themed Wordmark Context Menu SVG test...");
 
-        var expectedResult = QueryTestData.GetOneSvgIconWithTwoThemedWordmarkContextMenu();
+        var expectedResult = QueryTestData.GetThemedWordmarkContextMenu();
         var result = _main.LoadContextMenus(new Result
-            { ContextData = QueryTestData.GetOneSvgIconWithTwoThemedWordmarkContextData() });
+        {
+            ContextData = QueryTestData.GetThemedWordmarkContextData()
+            // CreateBasicSvgl(53, "Trpc", new CategoryString("Framework"),
+            // new ThemeString("trpc.svg"), "https://trpc.com", new ThemeObject(new SvgThemes
+            // {
+            //     Light = "trpc_wordmark_light.svg",
+            //     Dark = "trpc_wordmark_dark.svg"
+            // }))
+        });
 
 
         Assert.IsNotNull(result);
