@@ -14,7 +14,7 @@
 - [x] Restructure the entire codebase, to have two projects i.e Main Plugin & Unit Tests.
 - [x] Caching for Searched Results.
 - [x] Improve Search Results by adding some clause i.e perfect match, title startsWiths search query and title contains search query in earlier indexes.
-- [ ] Write Unit Tests for the Codebase.
+- [x] Write Unit Tests for the Codebase.
 - [x] Handle Error/Exception, when fetching actual SVG Code (Especially for tRPC's dark themed Wordmark SVG, where there's a error from SVGL's side).
 - [x] Show releavant context menu options for request logo and submit a logo result.
 - [x] Add a reload/re-validate cache command. Goal: In order to get latest results from the API, even though the cache gets re-validated whenever we start a new PowerToys Session but having a command to do is beneficial. Since, SVGL gets updated frequently, having a command which could just re-validate cache with starting a new session is nice to have.
@@ -29,4 +29,3 @@
 - [ ] Implement better searching i.e Fuzzy Search
 - [ ] Improve `Types.cs`, since it's not that good for sure.
 - [ ] Add Loading State/Result, when fetching for the first time. (New version of Powertoys will bring this feature🤞)
-
