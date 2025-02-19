@@ -56,8 +56,8 @@ public static class QueryTestData
             TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg")
         );
 
-        return new List<Result>
-        {
+        return
+        [
             CreateBasicResult("Google", TestConstants.ExpectedCategoryString("Google").ToString(), 100, googleContext),
             CreateBasicResult("Google Drive", TestConstants.ExpectedCategoryString("Google").ToString(), 99,
                 googleContext),
@@ -67,13 +67,13 @@ public static class QueryTestData
                 googleContext),
             CreateBasicResult("Google Colaboratory", $"{TestConstants.ExpectedCategoryString("Google")}, Software", 96,
                 googleContext)
-        };
+        ];
     }
 
     public static List<Result> GetCloudflareResults()
     {
-        return new List<Result>
-        {
+        return
+        [
             CreateBasicResult(
                 "Cloudflare Workers",
                 TestConstants.ExpectedCategoryString("Software").ToString(),
@@ -98,7 +98,7 @@ public static class QueryTestData
                     "https://www.cloudflare.com/"
                 )
             )
-        };
+        ];
     }
 
     public static List<Result> GetNoResultsFoundData(string query)
