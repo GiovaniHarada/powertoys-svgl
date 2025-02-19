@@ -13,16 +13,16 @@ public static class QueryTestData
             new()
             {
                 Title = "Google",
-                SubTitle = TestContants.ExpectedCategoryString("Google").ToString(),
+                SubTitle = TestConstants.ExpectedCategoryString("Google").ToString(),
                 IcoPath = "Images\\svgl.dark.png",
                 Score = 100,
                 ContextData = new Svgl
                 {
                     Id = 1,
                     Title = "Google",
-                    Category = TestContants.ExpectedCategoryString("Google"),
-                    Route = TestContants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestContants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
+                    Category = TestConstants.ExpectedCategoryString("Google"),
+                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
+                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
                     Url = "https://google.com"
                 },
                 Action = _ => true
@@ -30,16 +30,16 @@ public static class QueryTestData
             new()
             {
                 Title = "Google Drive",
-                SubTitle = TestContants.ExpectedCategoryString("Google").ToString(),
+                SubTitle = TestConstants.ExpectedCategoryString("Google").ToString(),
                 IcoPath = "Images\\svgl.dark.png",
                 Score = 99,
                 ContextData = new Svgl
                 {
                     Id = 1,
                     Title = "Google",
-                    Category = TestContants.ExpectedCategoryString("Google"),
-                    Route = TestContants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestContants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
+                    Category = TestConstants.ExpectedCategoryString("Google"),
+                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
+                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
                     Url = "https://google.com"
                 },
                 Action = _ => true
@@ -47,16 +47,16 @@ public static class QueryTestData
             new()
             {
                 Title = "Google Idx",
-                SubTitle = $"Software, {TestContants.ExpectedCategoryString("Google").ToString()}",
+                SubTitle = $"Software, {TestConstants.ExpectedCategoryString("Google").ToString()}",
                 IcoPath = "Images\\svgl.dark.png",
                 Score = 98,
                 ContextData = new Svgl
                 {
                     Id = 1,
                     Title = "Google",
-                    Category = TestContants.ExpectedCategoryString("Google"),
-                    Route = TestContants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestContants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
+                    Category = TestConstants.ExpectedCategoryString("Google"),
+                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
+                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
                     Url = "https://google.com"
                 },
                 Action = _ => true
@@ -64,16 +64,16 @@ public static class QueryTestData
             new()
             {
                 Title = "Google PaLM",
-                SubTitle = $"AI, {TestContants.ExpectedCategoryString("Google").ToString()}",
+                SubTitle = $"AI, {TestConstants.ExpectedCategoryString("Google").ToString()}",
                 IcoPath = "Images\\svgl.dark.png",
                 Score = 97,
                 ContextData = new Svgl
                 {
                     Id = 1,
                     Title = "Google",
-                    Category = TestContants.ExpectedCategoryString("Google"),
-                    Route = TestContants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestContants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
+                    Category = TestConstants.ExpectedCategoryString("Google"),
+                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
+                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
                     Url = "https://google.com"
                 },
                 Action = _ => true
@@ -81,16 +81,16 @@ public static class QueryTestData
             new()
             {
                 Title = "Google Colaboratory",
-                SubTitle = $"{TestContants.ExpectedCategoryString("Google").ToString()}, Software",
+                SubTitle = $"{TestConstants.ExpectedCategoryString("Google").ToString()}, Software",
                 IcoPath = "Images\\svgl.dark.png",
                 Score = 96,
                 ContextData = new Svgl
                 {
                     Id = 1,
                     Title = "Google",
-                    Category = TestContants.ExpectedCategoryString("Google"),
-                    Route = TestContants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestContants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
+                    Category = TestConstants.ExpectedCategoryString("Google"),
+                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
+                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
                     Url = "https://google.com"
                 },
                 Action = _ => true
@@ -107,15 +107,15 @@ public static class QueryTestData
             new()
             {
                 Title = "Cloudflare Workers",
-                SubTitle = TestContants.ExpectedCategoryString("Software").ToString(),
+                SubTitle = TestConstants.ExpectedCategoryString("Software").ToString(),
                 IcoPath = "Images\\svgl.dark.png",
                 Score = 100,
                 ContextData = new Svgl
                 {
                     Id = 179,
                     Title = "Cloudflare Workers",
-                    Category = TestContants.ExpectedCategoryString("Software"),
-                    Route = TestContants.ExpectedRouteString("https://svgl.app/library/cloudflare-workers.svg"),
+                    Category = TestConstants.ExpectedCategoryString("Software"),
+                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/cloudflare-workers.svg"),
                     Url = "https://workers.cloudflare.com/"
                 },
                 Action = _ => true
@@ -123,15 +123,15 @@ public static class QueryTestData
             new()
             {
                 Title = "Cloudflare",
-                SubTitle = TestContants.ExpectedCategoryString("Software").ToString(),
+                SubTitle = TestConstants.ExpectedCategoryString("Software").ToString(),
                 IcoPath = "Images\\svgl.dark.png",
                 Score = 99,
                 ContextData = new Svgl
                 {
                     Id = 180,
                     Title = "Cloudflare",
-                    Category = TestContants.ExpectedCategoryString("Software"),
-                    Route = TestContants.ExpectedRouteString("https://svgl.app/library/cloudflare.svg"),
+                    Category = TestConstants.ExpectedCategoryString("Software"),
+                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/cloudflare.svg"),
                     Url = "https://www.cloudflare.com/"
                 },
                 Action = _ => true
@@ -147,22 +147,22 @@ public static class QueryTestData
         {
             new()
             {
-                Title = TestContants.NoResultFoundMessage,
-                SubTitle = TestContants.NoResultFoundSubTitle(query),
+                Title = TestConstants.NoResultFoundMessage,
+                SubTitle = TestConstants.NoResultFoundSubTitle(query),
                 IcoPath = "Images\\svgl.dark.png",
                 Score = 100,
                 Action = _ => false
             },
             new()
             {
-                Title = TestContants.RequestLogo,
+                Title = TestConstants.RequestLogo,
                 SubTitle = "Request a Logo on SVGL's Repository",
                 IcoPath = "Images\\svgl.dark.png",
                 Action = _ => true
             },
             new()
             {
-                Title = TestContants.SubmitLogo,
+                Title = TestConstants.SubmitLogo,
                 SubTitle = "Submit a Logo on SVGL's Repository",
                 IcoPath = "Images\\svgl.dark.png",
                 Action = _ => true
