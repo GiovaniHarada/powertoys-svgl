@@ -258,6 +258,42 @@ public static class QueryTestData
         };
     }
 
+    public static Svgl GetOneSvgIconWithTwoThemedWordmarkContextData()
+    {
+        return new Svgl
+        {
+            Id = 438,
+            Title = "tRPC",
+            Category = new CategoryString("Framework"),
+            Route = new ThemeString("https://svgl.app/library/trpc.svg"),
+            Wordmark = new ThemeObject(new SvgThemes
+            {
+                Light = "https://svgl.app/library/trpc_wordmark_light.svg",
+                Dark = "https://svgl.applibrary/trpc_wordmark_dark.svg"
+            }),
+            Url = "https://trpc.io/"
+        };
+    }
+
+    public static Svgl GetThemedSvgIconContextData()
+    {
+        return new Svgl
+        {
+            Id = 449,
+            Title = "Clerk",
+            Category = new CategoryArray([
+                "Software",
+                "Authentication"
+            ]),
+            Route = new ThemeObject(new SvgThemes
+            {
+                Light = "https://svgl.app/library/clerk-light.svg",
+                Dark = "https://svgl.app/library/clerk-dark.svg"
+            }),
+            Url = "https://clerk.com/"
+        };
+    }
+
     public static List<ContextMenuResult> GetDefaultContextMenu()
     {
         return
@@ -287,6 +323,53 @@ public static class QueryTestData
                 Glyph = "\xE708",
                 AcceleratorKey = Key.Enter,
                 AcceleratorModifiers = ModifierKeys.Control
+            },
+            new ContextMenuResult
+            {
+                Title = Constants.CopyLightThemeSvgWordmarkMessage,
+                Glyph = "\xE8D2",
+                AcceleratorKey = Key.Enter,
+                AcceleratorModifiers = ModifierKeys.Shift
+            },
+            new ContextMenuResult
+            {
+                Title = Constants.CopyDarkThemeSvgWordmarkMessage,
+                Glyph = "\xE8D3",
+                AcceleratorKey = Key.Enter,
+                AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift
+            }
+        ];
+    }
+
+    public static List<ContextMenuResult> GetThemedSvgIconContextMenu()
+    {
+        return
+        [
+            new ContextMenuResult
+            {
+                Title = Constants.CopyLightThemeSvgLogoMessage,
+                Glyph = "\xE706",
+                AcceleratorKey = Key.Enter
+            },
+            new ContextMenuResult
+            {
+                Title = Constants.CopyDarkThemeSvgLogoMessage,
+                Glyph = "\xE708",
+                AcceleratorKey = Key.Enter,
+                AcceleratorModifiers = ModifierKeys.Control
+            }
+        ];
+    }
+
+    public static List<ContextMenuResult> GetOneSvgIconWithTwoThemedWordmarkContextMenu()
+    {
+        return
+        [
+            new ContextMenuResult
+            {
+                Title = Constants.CopySvgLogoMessage,
+                Glyph = "\xE8C8",
+                AcceleratorKey = Key.Enter
             },
             new ContextMenuResult
             {
