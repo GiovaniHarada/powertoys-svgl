@@ -9,7 +9,14 @@ using Wox.Plugin.Logger;
 
 namespace Community.PowerToys.Run.Plugin.SVGL;
 
-public class MyApiClients
+public interface IMyApiClient
+{
+    Task<List<SVGL>> GetSVGFromSource(string query);
+    Task<List<SVGL>> GetAllSVGs();
+    Task<string> GetSVGContent(string url);
+}
+
+public class MyApiClients : IMyApiClient
 {
     private static readonly HttpClient _httpClient = new HttpClient();
     private static readonly string pattern = @"library/(.*?)(\.|$)";
@@ -59,4 +66,6 @@ public class MyApiClients
         string data = await response.Content.ReadAsStringAsync();
         return data;
     }
+
+
 }
