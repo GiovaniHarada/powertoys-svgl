@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Community.PowerToys.Run.Plugin.SVGL.UnitTests.Test_Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wox.Plugin;
 
@@ -115,7 +116,7 @@ public class MainTests
         TestContext.WriteLine($"🔃 Starting Checking Context Menu for all SVG Variants test...");
 
         var expectedResult = QueryTestData.GetAllContextMenu();
-        var result = _main.LoadContextMenus(new Result { ContextData = QueryTestData.GetSampleSVGContextData() });
+        var result = _main.LoadContextMenus(new Result { ContextData = QueryTestData.GetSampleSvgContextData() });
 
         Assert.IsNotNull(result);
         Assert.AreEqual(expectedResult.Count, result.Count);
@@ -140,7 +141,7 @@ public class MainTests
         TestContext.WriteLine($"🔃 Starting Test for default Context Menu SVG test...");
 
         var expectedResult = QueryTestData.GetDefaultContextMenu();
-        var result = _main.LoadContextMenus(new Result() { ContextData = QueryTestData.GetDefaultSVGContextData() });
+        var result = _main.LoadContextMenus(new Result() { ContextData = QueryTestData.GetDefaultSvgContextData() });
 
         Assert.IsNotNull(result);
         Assert.AreEqual(expectedResult.Count, result.Count);
@@ -155,5 +156,60 @@ public class MainTests
         Assert.IsInstanceOfType<List<ContextMenuResult>>(result);
 
         TestContext.WriteLine("✅ Display Default Menu test Successfully Passed");
+    }
+
+    [TestMethod]
+    public void LoadContextMenu_should_display_themed_menu()
+    {
+        TestContext.WriteLine($"🔃 Starting Test for displaying Themed Context Menu SVG test...");
+
+        var expectedResult = QueryTestData.GetThemedSvgIconContextMenu();
+        var result = _main.LoadContextMenus(new Result { ContextData = QueryTestData.GetThemedSvgIconContextData() });
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedResult.Count, result.Count);
+
+        for (var i = 0; i < expectedResult.Count; i++)
+        {
+            Assert.AreEqual(expectedResult[i].Title, result[i].Title, $"Mismatch at index {i} for Title");
+            Assert.AreEqual(expectedResult[i].Glyph, result[i].Glyph, $"Mismatch at index {i} for Glyph");
+            Assert.AreEqual(expectedResult[i].AcceleratorKey, result[i].AcceleratorKey,
+                $"Mismatch at index {i} for AcceleratorKey");
+            Assert.AreEqual(expectedResult[i].AcceleratorModifiers, result[i].AcceleratorModifiers,
+                $"Mismatch at index {i} for AcceleratorModifiers");
+        }
+
+        Assert.IsInstanceOfType<List<ContextMenuResult>>(result);
+
+        TestContext.WriteLine("✅ Display Themed Context Menu test Successfully Passed");
+    }
+
+    [TestMethod]
+    public void LoadContextMenu_should_three_menu_with_one_icon_two_themed_wordmark()
+    {
+        TestContext.WriteLine(
+            $"🔃 Starting Test for displaying One Icon & Two Themed Wordmark Context Menu SVG test...");
+
+        var expectedResult = QueryTestData.GetOneSvgIconWithTwoThemedWordmarkContextMenu();
+        var result = _main.LoadContextMenus(new Result
+            { ContextData = QueryTestData.GetOneSvgIconWithTwoThemedWordmarkContextData() });
+
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedResult.Count, result.Count);
+
+        for (var i = 0; i < expectedResult.Count; i++)
+        {
+            Assert.AreEqual(expectedResult[i].Title, result[i].Title, $"Mismatch at index {i} for Title");
+            Assert.AreEqual(expectedResult[i].Glyph, result[i].Glyph, $"Mismatch at index {i} for Glyph");
+            Assert.AreEqual(expectedResult[i].AcceleratorKey, result[i].AcceleratorKey,
+                $"Mismatch at index {i} for AcceleratorKey");
+            Assert.AreEqual(expectedResult[i].AcceleratorModifiers, result[i].AcceleratorModifiers,
+                $"Mismatch at index {i} for AcceleratorModifiers");
+        }
+
+        Assert.IsInstanceOfType<List<ContextMenuResult>>(result);
+
+        TestContext.WriteLine("✅ Display One Icon & Two Themed Wordmark Context Menu test Successfully Passed");
     }
 }
