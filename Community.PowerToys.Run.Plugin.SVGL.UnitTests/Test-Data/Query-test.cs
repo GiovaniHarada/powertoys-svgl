@@ -6,291 +6,166 @@ namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests.Test_Data;
 
 public static class QueryTestData
 {
-    public static List<Result> GoogleData()
+    private static Result CreateBasicResult(string title, string subTitle, int score, Svgl contextData = null)
     {
-        var results = new List<Result>
+        return new Result
         {
-            new()
-            {
-                Title = "Google",
-                SubTitle = TestConstants.ExpectedCategoryString("Google").ToString(),
-                IcoPath = "Images\\svgl.dark.png",
-                Score = 100,
-                ContextData = new Svgl
-                {
-                    Id = 1,
-                    Title = "Google",
-                    Category = TestConstants.ExpectedCategoryString("Google"),
-                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
-                    Url = "https://google.com"
-                },
-                Action = _ => true
-            },
-            new()
-            {
-                Title = "Google Drive",
-                SubTitle = TestConstants.ExpectedCategoryString("Google").ToString(),
-                IcoPath = "Images\\svgl.dark.png",
-                Score = 99,
-                ContextData = new Svgl
-                {
-                    Id = 1,
-                    Title = "Google",
-                    Category = TestConstants.ExpectedCategoryString("Google"),
-                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
-                    Url = "https://google.com"
-                },
-                Action = _ => true
-            },
-            new()
-            {
-                Title = "Google Idx",
-                SubTitle = $"Software, {TestConstants.ExpectedCategoryString("Google").ToString()}",
-                IcoPath = "Images\\svgl.dark.png",
-                Score = 98,
-                ContextData = new Svgl
-                {
-                    Id = 1,
-                    Title = "Google",
-                    Category = TestConstants.ExpectedCategoryString("Google"),
-                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
-                    Url = "https://google.com"
-                },
-                Action = _ => true
-            },
-            new()
-            {
-                Title = "Google PaLM",
-                SubTitle = $"AI, {TestConstants.ExpectedCategoryString("Google").ToString()}",
-                IcoPath = "Images\\svgl.dark.png",
-                Score = 97,
-                ContextData = new Svgl
-                {
-                    Id = 1,
-                    Title = "Google",
-                    Category = TestConstants.ExpectedCategoryString("Google"),
-                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
-                    Url = "https://google.com"
-                },
-                Action = _ => true
-            },
-            new()
-            {
-                Title = "Google Colaboratory",
-                SubTitle = $"{TestConstants.ExpectedCategoryString("Google").ToString()}, Software",
-                IcoPath = "Images\\svgl.dark.png",
-                Score = 96,
-                ContextData = new Svgl
-                {
-                    Id = 1,
-                    Title = "Google",
-                    Category = TestConstants.ExpectedCategoryString("Google"),
-                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
-                    Wordmark = TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg"),
-                    Url = "https://google.com"
-                },
-                Action = _ => true
-            }
+            Title = title,
+            SubTitle = subTitle,
+            IcoPath = "Images\\svgl.dark.png",
+            Score = score,
+            ContextData = contextData,
+            Action = _ => true
         };
-
-        return results;
     }
 
-    public static List<Result> FlareData()
+    private static Result CreateNoActionResult(string title, string subTitle, int score)
     {
-        var results = new List<Result>
+        return new Result
         {
-            new()
-            {
-                Title = "Cloudflare Workers",
-                SubTitle = TestConstants.ExpectedCategoryString("Software").ToString(),
-                IcoPath = "Images\\svgl.dark.png",
-                Score = 100,
-                ContextData = new Svgl
-                {
-                    Id = 179,
-                    Title = "Cloudflare Workers",
-                    Category = TestConstants.ExpectedCategoryString("Software"),
-                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/cloudflare-workers.svg"),
-                    Url = "https://workers.cloudflare.com/"
-                },
-                Action = _ => true
-            },
-            new()
-            {
-                Title = "Cloudflare",
-                SubTitle = TestConstants.ExpectedCategoryString("Software").ToString(),
-                IcoPath = "Images\\svgl.dark.png",
-                Score = 99,
-                ContextData = new Svgl
-                {
-                    Id = 180,
-                    Title = "Cloudflare",
-                    Category = TestConstants.ExpectedCategoryString("Software"),
-                    Route = TestConstants.ExpectedRouteString("https://svgl.app/library/cloudflare.svg"),
-                    Url = "https://www.cloudflare.com/"
-                },
-                Action = _ => true
-            }
+            Title = title,
+            SubTitle = subTitle,
+            IcoPath = "Images\\svgl.dark.png",
+            Score = score,
+            Action = _ => false
         };
-
-        return results;
     }
 
-    public static List<Result> NoResultFoundData(string query)
+    private static Svgl CreateBasicSvgl(int id, string title, CategoryBase category, ThemeBase route, string url,
+        ThemeBase wordmark = null)
     {
-        var results = new List<Result>
+        return new Svgl
         {
-            new()
-            {
-                Title = TestConstants.NoResultFoundMessage,
-                SubTitle = TestConstants.NoResultFoundSubTitle(query),
-                IcoPath = "Images\\svgl.dark.png",
-                Score = 100,
-                Action = _ => false
-            },
-            new()
-            {
-                Title = TestConstants.RequestLogo,
-                SubTitle = "Request a Logo on SVGL's Repository",
-                IcoPath = "Images\\svgl.dark.png",
-                Action = _ => true
-            },
-            new()
-            {
-                Title = TestConstants.SubmitLogo,
-                SubTitle = "Submit a Logo on SVGL's Repository",
-                IcoPath = "Images\\svgl.dark.png",
-                Action = _ => true
-            }
+            Id = id,
+            Title = title,
+            Category = category,
+            Route = route,
+            Wordmark = wordmark,
+            Url = url
         };
-        return results;
     }
 
-    public static List<Svgl> GetSampleSvgs()
+    public static List<Result> GetGoogleRelatedResults()
+    {
+        var googleContext = CreateBasicSvgl(
+            1,
+            "Google",
+            TestConstants.ExpectedCategoryString("Google"),
+            TestConstants.ExpectedRouteString("https://svgl.app/library/google.svg"),
+            "https://google.com",
+            TestConstants.ExpectedWordmarkString("https://svgl.app/library/google-wordmark.svg")
+        );
+
+        return new List<Result>
+        {
+            CreateBasicResult("Google", TestConstants.ExpectedCategoryString("Google").ToString(), 100, googleContext),
+            CreateBasicResult("Google Drive", TestConstants.ExpectedCategoryString("Google").ToString(), 99,
+                googleContext),
+            CreateBasicResult("Google Idx", $"Software, {TestConstants.ExpectedCategoryString("Google")}", 98,
+                googleContext),
+            CreateBasicResult("Google PaLM", $"AI, {TestConstants.ExpectedCategoryString("Google")}", 97,
+                googleContext),
+            CreateBasicResult("Google Colaboratory", $"{TestConstants.ExpectedCategoryString("Google")}, Software", 96,
+                googleContext)
+        };
+    }
+
+    public static List<Result> GetCloudflareResults()
+    {
+        return new List<Result>
+        {
+            CreateBasicResult(
+                "Cloudflare Workers",
+                TestConstants.ExpectedCategoryString("Software").ToString(),
+                100,
+                CreateBasicSvgl(
+                    179,
+                    "Cloudflare Workers",
+                    TestConstants.ExpectedCategoryString("Software"),
+                    TestConstants.ExpectedRouteString("https://svgl.app/library/cloudflare-workers.svg"),
+                    "https://workers.cloudflare.com/"
+                )
+            ),
+            CreateBasicResult(
+                "Cloudflare",
+                TestConstants.ExpectedCategoryString("Software").ToString(),
+                99,
+                CreateBasicSvgl(
+                    180,
+                    "Cloudflare",
+                    TestConstants.ExpectedCategoryString("Software"),
+                    TestConstants.ExpectedRouteString("https://svgl.app/library/cloudflare.svg"),
+                    "https://www.cloudflare.com/"
+                )
+            )
+        };
+    }
+
+    public static List<Result> GetNoResultsFoundData(string query)
     {
         return
         [
-            // Case 1: Simple case - ThemeString + CategoryString
-            new Svgl
-            {
-                Id = 1,
-                Title = "Google",
-                Category = new CategoryString("Technology"),
-                Route = new ThemeString("google.svg"),
-                Wordmark = new ThemeString("google-wordmark.svg"),
-                Url = "https://google.com"
-            },
+            CreateNoActionResult(TestConstants.NoResultFoundMessage, TestConstants.NoResultFoundSubTitle(query), 100),
+            CreateBasicResult(TestConstants.RequestLogo, "Request a Logo on SVGL's Repository", 0),
+            CreateBasicResult(TestConstants.SubmitLogo, "Submit a Logo on SVGL's Repository", 0)
+        ];
+    }
 
-            // Case 2: Theme with light/dark + Array of categories
-            new Svgl
-            {
-                Id = 2,
-                Title = "Vercel",
-                Category = new CategoryArray(["Hosting", "Development"]),
-                Route = new ThemeObject(new SvgThemes
+    public static List<Svgl> GetSampleLogos()
+    {
+        return
+        [
+            CreateBasicSvgl(
+                1,
+                "Google",
+                new CategoryString("Technology"),
+                new ThemeString("google.svg"),
+                "https://google.com",
+                new ThemeString("google-wordmark.svg")
+            ),
+            CreateBasicSvgl(
+                2,
+                "Vercel",
+                new CategoryArray(["Hosting", "Development"]),
+                new ThemeObject(new SvgThemes
                 {
                     Light = "vercel.svg",
                     Dark = "vercel-dark.svg"
                 }),
-                Wordmark = new ThemeObject(new SvgThemes
+                "https://vercel.com",
+                new ThemeObject(new SvgThemes
                 {
                     Light = "vercel-wordmark.svg",
                     Dark = "vercel-wordmark-dark.svg"
-                }),
-                Url = "https://vercel.com"
-            },
-
-            // Case 3: Mixed theme types + single category
-            new Svgl
-            {
-                Id = 3,
-                Title = "GitHub",
-                Category = new CategoryString("Development"),
-                Route = new ThemeObject(new SvgThemes
+                })
+            ),
+            CreateBasicSvgl(
+                3,
+                "GitHub",
+                new CategoryString("Development"),
+                new ThemeObject(new SvgThemes
                 {
                     Light = "github.svg",
                     Dark = "github-dark.svg"
                 }),
-                Wordmark = new ThemeString("github-wordmark.svg"),
-                Url = "https://github.com"
-            }
+                "https://github.com",
+                new ThemeString("github-wordmark.svg")
+            )
         ];
     }
 
-
-    public static Svgl GetSampleSvgContextData()
+    private static ContextMenuResult CreateContextMenuResult(
+        string title,
+        string glyph,
+        Key acceleratorKey,
+        ModifierKeys modifiers = ModifierKeys.None)
     {
-        return
-            new Svgl()
-            {
-                Id = 2,
-                Title = "Vercel",
-                Category = new CategoryArray(["Hosting", "Development"]),
-                Route = new ThemeObject(new SvgThemes
-                {
-                    Light = "vercel.svg",
-                    Dark = "vercel-dark.svg"
-                }),
-                Wordmark = new ThemeObject(new SvgThemes
-                {
-                    Light = "vercel-wordmark.svg",
-                    Dark = "vercel-wordmark-dark.svg"
-                }),
-                Url = "https://vercel.com"
-            }
-            ;
-    }
-
-    public static Svgl GetDefaultSvgContextData()
-    {
-        return new Svgl
+        return new ContextMenuResult
         {
-            Id = 3,
-            Title = "GitHub",
-            Category = new CategoryString("Development"),
-            Route = new ThemeString("github.svg"),
-            Url = "https://github.com"
-        };
-    }
-
-    public static Svgl GetOneSvgIconWithTwoThemedWordmarkContextData()
-    {
-        return new Svgl
-        {
-            Id = 438,
-            Title = "tRPC",
-            Category = new CategoryString("Framework"),
-            Route = new ThemeString("https://svgl.app/library/trpc.svg"),
-            Wordmark = new ThemeObject(new SvgThemes
-            {
-                Light = "https://svgl.app/library/trpc_wordmark_light.svg",
-                Dark = "https://svgl.applibrary/trpc_wordmark_dark.svg"
-            }),
-            Url = "https://trpc.io/"
-        };
-    }
-
-    public static Svgl GetThemedSvgIconContextData()
-    {
-        return new Svgl
-        {
-            Id = 449,
-            Title = "Clerk",
-            Category = new CategoryArray([
-                "Software",
-                "Authentication"
-            ]),
-            Route = new ThemeObject(new SvgThemes
-            {
-                Light = "https://svgl.app/library/clerk-light.svg",
-                Dark = "https://svgl.app/library/clerk-dark.svg"
-            }),
-            Url = "https://clerk.com/"
+            Title = title,
+            Glyph = glyph,
+            AcceleratorKey = acceleratorKey,
+            AcceleratorModifiers = modifiers
         };
     }
 
@@ -298,93 +173,101 @@ public static class QueryTestData
     {
         return
         [
-            new ContextMenuResult
-            {
-                Title = Constants.CopySvgLogoMessage,
-                Glyph = "\xE8C8",
-                AcceleratorKey = Key.Enter
-            }
+            CreateContextMenuResult(Constants.CopySvgLogoMessage, "\xE8C8", Key.Enter)
         ];
     }
 
-    public static List<ContextMenuResult> GetAllContextMenu()
+    public static List<ContextMenuResult> GetThemedContextMenu()
     {
         return
         [
-            new ContextMenuResult
-            {
-                Title = Constants.CopyLightThemeSvgLogoMessage,
-                Glyph = "\xE706",
-                AcceleratorKey = Key.Enter
-            },
-            new ContextMenuResult
-            {
-                Title = Constants.CopyDarkThemeSvgLogoMessage,
-                Glyph = "\xE708",
-                AcceleratorKey = Key.Enter,
-                AcceleratorModifiers = ModifierKeys.Control
-            },
-            new ContextMenuResult
-            {
-                Title = Constants.CopyLightThemeSvgWordmarkMessage,
-                Glyph = "\xE8D2",
-                AcceleratorKey = Key.Enter,
-                AcceleratorModifiers = ModifierKeys.Shift
-            },
-            new ContextMenuResult
-            {
-                Title = Constants.CopyDarkThemeSvgWordmarkMessage,
-                Glyph = "\xE8D3",
-                AcceleratorKey = Key.Enter,
-                AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift
-            }
+            CreateContextMenuResult(Constants.CopyLightThemeSvgLogoMessage, "\xE706", Key.Enter),
+            CreateContextMenuResult(Constants.CopyDarkThemeSvgLogoMessage, "\xE708", Key.Enter, ModifierKeys.Control)
         ];
     }
 
-    public static List<ContextMenuResult> GetThemedSvgIconContextMenu()
+    public static List<ContextMenuResult> GetFullContextMenu()
     {
         return
         [
-            new ContextMenuResult
-            {
-                Title = Constants.CopyLightThemeSvgLogoMessage,
-                Glyph = "\xE706",
-                AcceleratorKey = Key.Enter
-            },
-            new ContextMenuResult
-            {
-                Title = Constants.CopyDarkThemeSvgLogoMessage,
-                Glyph = "\xE708",
-                AcceleratorKey = Key.Enter,
-                AcceleratorModifiers = ModifierKeys.Control
-            }
+            CreateContextMenuResult(Constants.CopyLightThemeSvgLogoMessage, "\xE706", Key.Enter),
+            CreateContextMenuResult(Constants.CopyDarkThemeSvgLogoMessage, "\xE708", Key.Enter, ModifierKeys.Control),
+            CreateContextMenuResult(Constants.CopyLightThemeSvgWordmarkMessage, "\xE8D2", Key.Enter,
+                ModifierKeys.Shift),
+            CreateContextMenuResult(Constants.CopyDarkThemeSvgWordmarkMessage, "\xE8D3", Key.Enter,
+                ModifierKeys.Control | ModifierKeys.Shift)
         ];
     }
 
-    public static List<ContextMenuResult> GetOneSvgIconWithTwoThemedWordmarkContextMenu()
+    public static List<ContextMenuResult> GetThemedWordmarkContextMenu()
     {
         return
         [
-            new ContextMenuResult
-            {
-                Title = Constants.CopySvgLogoMessage,
-                Glyph = "\xE8C8",
-                AcceleratorKey = Key.Enter
-            },
-            new ContextMenuResult
-            {
-                Title = Constants.CopyLightThemeSvgWordmarkMessage,
-                Glyph = "\xE8D2",
-                AcceleratorKey = Key.Enter,
-                AcceleratorModifiers = ModifierKeys.Shift
-            },
-            new ContextMenuResult
-            {
-                Title = Constants.CopyDarkThemeSvgWordmarkMessage,
-                Glyph = "\xE8D3",
-                AcceleratorKey = Key.Enter,
-                AcceleratorModifiers = ModifierKeys.Control | ModifierKeys.Shift
-            }
+            CreateContextMenuResult(Constants.CopySvgLogoMessage, "\xE8C8", Key.Enter),
+            CreateContextMenuResult(Constants.CopyLightThemeSvgWordmarkMessage, "\xE8D2", Key.Enter,
+                ModifierKeys.Shift),
+            CreateContextMenuResult(Constants.CopyDarkThemeSvgWordmarkMessage, "\xE8D3", Key.Enter,
+                ModifierKeys.Control | ModifierKeys.Shift)
         ];
+    }
+
+    public static Svgl GetDefaultContextData()
+    {
+        return CreateBasicSvgl(
+            3,
+            "GitHub",
+            new CategoryString("Development"),
+            new ThemeString("github.svg"),
+            "https://github.com");
+    }
+
+    public static Svgl GetThemedContextData()
+    {
+        return CreateBasicSvgl(
+            449,
+            "Clerk",
+            new CategoryArray(["Software", "Authentication"]),
+            new ThemeObject(new SvgThemes
+            {
+                Light = "https://svgl.app/library/clerk-light.svg",
+                Dark = "https://svgl.app/library/clerk-dark.svg"
+            }),
+            "https://clerk.com/");
+    }
+
+    public static Svgl GetFullContextData()
+    {
+        return CreateBasicSvgl(
+            2,
+            "Vercel",
+            new CategoryArray(["Hosting", "Development"]),
+            new ThemeObject(new SvgThemes
+            {
+                Light = "vercel.svg",
+                Dark = "vercel-dark.svg"
+            }),
+            "https://vercel.com",
+            new ThemeObject(new SvgThemes
+            {
+                Light = "vercel-wordmark.svg",
+                Dark = "vercel-wordmark-dark.svg"
+            })
+        );
+    }
+
+    public static Svgl GetThemedWordmarkContextData()
+    {
+        return CreateBasicSvgl(
+            438,
+            "tRPC",
+            new CategoryString("Framework"),
+            new ThemeString("https://svgl.app/library/trpc.svg"),
+            "https://trpc.io/",
+            new ThemeObject(new SvgThemes
+            {
+                Light = "https://svgl.app/library/trpc_wordmark_light.svg",
+                Dark = "https://svgl.app/library/trpc_wordmark_dark.svg"
+            })
+        );
     }
 }
