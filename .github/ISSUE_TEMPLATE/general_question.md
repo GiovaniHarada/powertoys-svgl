@@ -1,5 +1,5 @@
 ---
-name: General Question
+name: 🤔 General Question
 about: Ask anything related to the plugin (doubts/questions)
 title: "❓ xx"
 labels: ["question"]
