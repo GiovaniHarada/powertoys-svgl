@@ -2,7 +2,7 @@
 name: Feature Request
 about: Suggest an idea for the project
 title: 💫 xx
-labels: enhancement
+labels: ["enhancement"]
 ---
 
 **Is your feature request related problem?**
