@@ -6,8 +6,8 @@ labels: ["question"]
 ---
 
 
-### Your Question
-<!-- Clearly describe your question or doubt here. -->
+**Your Question**
+Clearly describe your question or doubt here.
 
-### Additional Context (Optional)
-<!-- Add any relevant details, screenshots, or links if needed. -->
+**Additional Context (Optional)**
+Add any relevant details, screenshots, or links if needed.
