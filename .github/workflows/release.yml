@@ -50,6 +50,8 @@ jobs:
 
       - name: Upload Artifact's to GitHub Release
         run: |
-          gh release upload "v${{env.PLUGIN_VERSION}}" Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}}/* --clobber
+          $files = Get-ChildItem -Path Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}} -File foreach ($file in $files) {
+              gh release upload "v${{env.PLUGIN_VERSION}}" "$file.FullName" --clobber
+          }
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
