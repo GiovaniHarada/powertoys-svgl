@@ -1,0 +1,58 @@
+name: Build & Release Assets
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  PLUGIN_NAME: SVGL
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [x64, ARM64]
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read Version from Directory.Build.Props
+        id: get-version
+        shell: pwsh
+        run: |
+          [xml]$xml = Get-Content -Path "${{ github.workspace }}/Directory.Build.Props"
+          echo "PLUGIN_VERSION=$($xml.Project.PropertyGroup.Version)" >> $env:GITHUB_ENV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Build Project
+        shell: pwsh
+        run: dotnet build Community.PowerToys.Run.Plugin.SVGL.sln --configuration Release /p:Platform=${{ matrix.platform }} /p:EnableWindowsTargeting=true
+
+      - name: Prepare Artifact
+        shell: pwsh
+        run: |
+          # Remove unwanted files
+          Remove-Item -Path Community.PowerToys.Run.Plugin.SVGL\bin\* -Recurse -Include *.xml, *pdb, PowerToys.*, Wox.*
+          # Rename the Release directory to the plugin name
+          Rename-Item -Path "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\Release" -NewName $env:PLUGIN_NAME
+          Compress-Archive -Path "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME" -DestinationPath "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}.zip"
+
+      - name: Upload to Release
+        shell: pwsh
+        run: |
+          $versionTag = "v${{ env.PLUGIN_VERSION }}"
+          $zipPath = "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}.zip"
+          gh release upload $versionTag $zipPath --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
