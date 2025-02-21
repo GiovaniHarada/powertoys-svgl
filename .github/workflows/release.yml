@@ -57,7 +57,13 @@ jobs:
       - name: Upload Artifact's to GitHub Release
         shell: pwsh
         run: |
-          $files = Get-ChildItem -Path downloaded-artifact -File
+          # Check if release exists, create if not
+          $releaseExists = gh release view "v$env:PLUGIN_VERSION" 2>&1
+          if ($LASTEXITCODE -ne 0) {
+           gh release create "v$env:PLUGIN_VERSION" --generate-notes
+          }
+          
+          $files = Get-ChildItem -Path downloaded-artifact -File -Recurse
           foreach ($file in $files) {
             gh release upload "v${{ env.PLUGIN_VERSION }}" $file.FullName --clobber
           }
