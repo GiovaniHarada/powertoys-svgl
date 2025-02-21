@@ -6,108 +6,119 @@ on:
     tags:
       - "v*"
 
-env:
-  PLUGIN_NAME: SVGL
-
 permissions:
   contents: write
 
+env:
+  PLUGIN_NAME: SVGL
 
 jobs:
   build:
     strategy:
       matrix:
         platform: [x64, ARM64]
-
     runs-on: windows-latest
-
+    outputs:
+      plugin_version: ${{ steps.get-version.outputs.PLUGIN_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Debug Build Props File Path
-        run: pwd
-
-      - name: Read Version
+      - name: Read Version from Directory.Build.Props
+        id: get-version
+        shell: pwsh
         run: |
           [xml]$xml = Get-Content -Path "${{ github.workspace }}/Directory.Build.Props"
-          echo "PLUGIN_VERSION=$($xml.Project.PropertyGroup.Version)" >> $env:GITHUB_ENV
+          $version = $xml.Project.PropertyGroup.Version
+          Write-Output "PLUGIN_VERSION=$version" >> $env:GITHUB_ENV
+          Write-Output "::set-output name=PLUGIN_VERSION::$version"
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
 
-      - name: Build
-        run: dotnet build Community.PowerToys.Run.Plugin.SVGL.sln --configuration Release /p:Platform=${{matrix.platform}} /p:EnableWindowsTargeting=true
+      - name: Build Project
+        shell: pwsh
+        run: dotnet build Community.PowerToys.Run.Plugin.SVGL.sln --configuration Release /p:Platform=${{ matrix.platform }} /p:EnableWindowsTargeting=true
 
       - name: Prepare Artifact
+        shell: pwsh
         run: |
+          # Remove unwanted files
           Remove-Item -Path Community.PowerToys.Run.Plugin.SVGL\bin\* -Recurse -Include *.xml, *pdb, PowerToys.*, Wox.*
-          Rename-Item -Path Community.PowerToys.Run.Plugin.SVGL\bin\${{matrix.platform}}\Release -NewName $env:PLUGIN_NAME
+          # Rename the Release directory to the plugin name
+          Rename-Item -Path "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\Release" -NewName $env:PLUGIN_NAME
+
+      - name: Zip Artifact
+        shell: pwsh
+        run: |
+          $folder = "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME"
+          $zipPath = "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME.zip"
+          Compress-Archive -Path $folder -DestinationPath $zipPath
+          Write-Output "Created zip: $zipPath"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.PLUGIN_NAME}}-${{env.PLUGIN_VERSION}}-${{matrix.platform}}
-          path: "Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}}/*"
+          name: ${{ env.PLUGIN_NAME }}-${{ steps.get-version.outputs.PLUGIN_VERSION }}-${{ matrix.platform }}
+          path: "Community.PowerToys.Run.Plugin.SVGL/bin/${{ matrix.platform }}/$env:PLUGIN_NAME.zip"
 
   release:
     needs: build
     runs-on: windows-latest
+    env:
+      # It’s easier to re-read the version here
+      PLUGIN_NAME: SVGL
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download Artifacts
+      - name: Re-read Version from Directory.Build.Props
+        id: get-version-release
+        shell: pwsh
+        run: |
+          [xml]$xml = Get-Content -Path "${{ github.workspace }}/Directory.Build.Props"
+          $version = $xml.Project.PropertyGroup.Version
+          Write-Output "PLUGIN_VERSION=$version" >> $env:GITHUB_ENV
+          Write-Output "::set-output name=PLUGIN_VERSION::$version"
+
+      - name: Download Artifacts (without extraction)
         uses: actions/download-artifact@v4
         with:
           path: downloaded-artifacts
+          extract: false  # keep the zip files intact
 
       - name: Ensure Release Exists
         shell: pwsh
         run: |
-          $versionTag = "v${{ env.PLUGIN_VERSION }}"
+          $versionTag = "v${{ steps.get-version-release.outputs.PLUGIN_VERSION }}"
+          Write-Output "Computed version tag: $versionTag"
           try {
-            $release = gh release view $versionTag --json tagName --jq '.tagName'
+              $release = gh release view $versionTag --json tagName --jq '.tagName'
           }
           catch {
-            $release = $null
+              $release = $null
           }
           if (-not $release) {
-            Write-Output "Release $versionTag does not exist. Creating it..."
-            gh release create $versionTag --title "Release $versionTag" --notes "Automated release created via CI."
+              Write-Output "Release $versionTag does not exist. Creating it..."
+              gh release create $versionTag --title "Release $versionTag" --notes "Automated release created via CI."
           }
           else {
-            Write-Output "Release $versionTag already exists."
+              Write-Output "Release $versionTag already exists."
           }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-      - name: Upload Artifacts to Release
+      - name: Upload Artifacts to GitHub Release
         shell: pwsh
         run: |
-          $versionTag = "v${{ env.PLUGIN_VERSION }}"
-          $files = Get-ChildItem -Path downloaded-artifacts -File -Recurse
+          $versionTag = "v${{ steps.get-version-release.outputs.PLUGIN_VERSION }}"
+          # Get all zip files from the downloaded artifacts folder (these should be the complete artifacts)
+          $files = Get-ChildItem -Path downloaded-artifacts -Filter "*.zip" -File -Recurse
           foreach ($file in $files) {
               Write-Output "Uploading $($file.FullName) to release $versionTag"
               gh release upload $versionTag $file.FullName --clobber
           }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Download Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: ${{ env.PLUGIN_NAME }}-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}
-#          path: downloaded-artifact
-#
-#      - name: Upload Artifact's to GitHub Release
-#        shell: pwsh
-#        run: |
-#          $files = Get-ChildItem -Path downloaded-artifact -File -Recurse
-#          foreach ($file in $files) {
-#            gh release upload "v${{ env.PLUGIN_VERSION }}" $file.FullName --clobber
-#          }
-#        env:
-#          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
