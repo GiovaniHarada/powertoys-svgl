@@ -48,10 +48,16 @@ jobs:
           name: ${{env.PLUGIN_NAME}}-${{env.PLUGIN_VERSION}}-${{matrix.platform}}
           path: "Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}}/*"
 
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.PLUGIN_NAME }}-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}
+          path: downloaded-artifact
+
       - name: Upload Artifact's to GitHub Release
         shell: pwsh
         run: |
-          $files = Get-ChildItem -Path Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}} -File 
+          $files = Get-ChildItem -Path downloaded-artifact -File
           foreach ($file in $files) {
             gh release upload "v${{ env.PLUGIN_VERSION }}" $file.FullName --clobber
           }
