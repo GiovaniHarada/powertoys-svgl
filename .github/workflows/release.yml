@@ -47,3 +47,9 @@ jobs:
         with:
           name: ${{env.PLUGIN_NAME}}-${{env.PLUGIN_VERSION}}-${{matrix.platform}}
           path: "Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}}/*"
+
+      - name: Upload Artifact's to GitHub Release
+        run: |
+          gh release upload "v${{env.PLUGIN_VERSION}}" Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}}/* --clobber
+        env:
+          GITHUB_TOKEN: ${{secret.GITHUB_TOKEN}}
