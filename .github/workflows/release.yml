@@ -48,24 +48,55 @@ jobs:
           name: ${{env.PLUGIN_NAME}}-${{env.PLUGIN_VERSION}}-${{matrix.platform}}
           path: "Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}}/*"
 
-      - name: Download Artifact
+  release:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.PLUGIN_NAME }}-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}
-          path: downloaded-artifact
+          path: downloaded-artifacts
 
-      - name: Upload Artifact's to GitHub Release
+      - name: Ensure Release Exists
         shell: pwsh
         run: |
-          # Check if release exists, create if not
-          $releaseExists = gh release view "v$env:PLUGIN_VERSION" 2>&1
-          if ($LASTEXITCODE -ne 0) {
-           gh release create "v$env:PLUGIN_VERSION" --generate-notes
-          }
-          
-          $files = Get-ChildItem -Path downloaded-artifact -File -Recurse
-          foreach ($file in $files) {
-            gh release upload "v${{ env.PLUGIN_VERSION }}" $file.FullName --clobber
+          $versionTag = "v${{ env.PLUGIN_VERSION }}"
+          $release = gh release view $versionTag --json tagName --jq '.tagName' -ErrorAction SilentlyContinue
+          if (-not $release) {
+              Write-Output "Release $versionTag does not exist. Creating it..."
+              gh release create $versionTag --title "Release $versionTag" --notes "Automated release created via CI."
+          } else {
+              Write-Output "Release $versionTag already exists."
           }
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts to Release
+        shell: pwsh
+        run: |
+          $versionTag = "v${{ env.PLUGIN_VERSION }}"
+          $files = Get-ChildItem -Path downloaded-artifacts -File -Recurse
+          foreach ($file in $files) {
+              Write-Output "Uploading $($file.FullName) to release $versionTag"
+              gh release upload $versionTag $file.FullName --clobber
+          }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Download Artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: ${{ env.PLUGIN_NAME }}-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}
+#          path: downloaded-artifact
+#
+#      - name: Upload Artifact's to GitHub Release
+#        shell: pwsh
+#        run: |
+#          $files = Get-ChildItem -Path downloaded-artifact -File -Recurse
+#          foreach ($file in $files) {
+#            gh release upload "v${{ env.PLUGIN_VERSION }}" $file.FullName --clobber
+#          }
+#        env:
+#          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
