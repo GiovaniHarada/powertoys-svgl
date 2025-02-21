@@ -52,4 +52,4 @@ jobs:
         run: |
           gh release upload "v${{env.PLUGIN_VERSION}}" Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}}/* --clobber
         env:
-          GITHUB_TOKEN: ${{secret.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
