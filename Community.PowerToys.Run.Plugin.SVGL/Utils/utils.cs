@@ -3,42 +3,40 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Community.PowerToys.Run.Plugin.SVGL.Data;
 using Wox.Plugin;
 
-namespace Community.PowerToys.Run.Plugin.SVGL;
+namespace Community.PowerToys.Run.Plugin.SVGL.Utils;
 
-class Utils
+internal static class Utils
 {
-    private static readonly MyApiClients _apiClient = new MyApiClients();
+    private static readonly MyApiClients ApiClient = new();
 
-    public static bool CopyToClipboard(string value)
+    private static bool CopyToClipboard(string value)
     {
-        if (!string.IsNullOrEmpty(value))
-        {
-            Clipboard.SetText(value);
-            return true;
-        }
-        return false;
+        if (string.IsNullOrEmpty(value)) return false;
+        Clipboard.SetText(value);
+        return true;
     }
 
-    public static bool CopySVGContent(string svg)
+    private static bool CopySvgContent(string svg)
     {
         try
         {
-
-            var content = Task.Run(async () => await _apiClient.GetSVGContent(svg)).Result;
+            var content = Task.Run(async () => await ApiClient.GetSvgContent(svg)).Result;
             CopyToClipboard(content);
             return true;
         }
-        catch (HttpRequestException ex)
+        catch (HttpRequestException)
         {
             return false;
         }
     }
 
-    public static ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content, Key key, ModifierKeys modifier = ModifierKeys.None)
+    public static ContextMenuResult CreateCopyMenuItem(string title, string glyph, string content, Key key,
+        ModifierKeys modifier = ModifierKeys.None)
     {
-        return GetContextMenuResult(new IGetContextMenuResult
+        return GetContextMenuResult(new GetContextMenuResult
         {
             Title = title,
             Glyph = glyph,
@@ -48,7 +46,7 @@ class Utils
         });
     }
 
-    public static ContextMenuResult GetContextMenuResult(IGetContextMenuResult args)
+    public static ContextMenuResult GetContextMenuResult(GetContextMenuResult args)
     {
         return new ContextMenuResult
         {
@@ -59,7 +57,7 @@ class Utils
             AcceleratorKey = args.AcceleratorKey,
             AcceleratorModifiers = args.AcceleratorModifiers,
             //Action = context => args.CustomAction != null ? args.CustomAction(context) : CopySVGContent(args.CopyContent)
-            Action = context => args.CustomAction?.Invoke(context) ?? CopySVGContent(args.CopyContent)
+            Action = context => args.CustomAction?.Invoke(context) ?? CopySvgContent(args.CopyContent)
         };
     }
 
@@ -72,11 +70,13 @@ class Utils
     {
         try
         {
-            using (var client = new HttpClient())
-            using (var response = client.GetAsync("https://www.google.com/").Result)
-                return response.IsSuccessStatusCode;
-
+            using var client = new HttpClient();
+            using var response = client.GetAsync("https://www.google.com/").Result;
+            return response.IsSuccessStatusCode;
         }
-        catch (Exception ex) { return false; }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }
