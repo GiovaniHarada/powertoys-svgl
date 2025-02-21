@@ -39,8 +39,8 @@ jobs:
 
       - name: Prepare Artifact
         run: |
-          Remove-Path -Path Community.PowerToys.Run.Plugin.SVGL\bin\* -Recurse -Include *.xml, *pbd, PowerToys.*, Wox.*
-          Remove-Path -Path Community.PowerToys.Run.Plugin.SVGL\bin\${{matrix.platform}}\Release -NewName $env:PLUGIN_NAME
+          Remove-Item -Path Community.PowerToys.Run.Plugin.SVGL\bin\* -Recurse -Include *.xml, *pbd, PowerToys.*, Wox.*
+          Remove-Item -Path Community.PowerToys.Run.Plugin.SVGL\bin\${{matrix.platform}}\Release -NewName $env:PLUGIN_NAME
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
