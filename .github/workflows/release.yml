@@ -9,6 +9,10 @@ on:
 env:
   PLUGIN_NAME: SVGL
 
+permissions:
+  contents: write
+
+
 jobs:
   build:
     strategy:
@@ -64,15 +68,22 @@ jobs:
         shell: pwsh
         run: |
           $versionTag = "v${{ env.PLUGIN_VERSION }}"
-          $release = gh release view $versionTag --json tagName --jq '.tagName' -ErrorAction SilentlyContinue
+          try {
+            $release = gh release view $versionTag --json tagName --jq '.tagName'
+          }
+          catch {
+            $release = $null
+          }
           if (-not $release) {
-              Write-Output "Release $versionTag does not exist. Creating it..."
-              gh release create $versionTag --title "Release $versionTag" --notes "Automated release created via CI."
-          } else {
-              Write-Output "Release $versionTag already exists."
+            Write-Output "Release $versionTag does not exist. Creating it..."
+            gh release create $versionTag --title "Release $versionTag" --notes "Automated release created via CI."
+          }
+          else {
+            Write-Output "Release $versionTag already exists."
           }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Upload Artifacts to Release
         shell: pwsh
