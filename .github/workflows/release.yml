@@ -52,7 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-            asset_paths: '["Community.PowerToys.Run.Plugin.SVGL/bin/${{ matrix.platform }}/*"]'
+            asset_paths: "Community.PowerToys.Run.Plugin.SVGL/bin/${{ matrix.platform }}/*"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
