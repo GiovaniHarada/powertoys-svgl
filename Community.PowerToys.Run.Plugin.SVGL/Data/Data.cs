@@ -4,68 +4,67 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Community.PowerToys.Run.Plugin.SVGL.Utils;
 using Wox.Plugin.Logger;
 
 
-namespace Community.PowerToys.Run.Plugin.SVGL;
+namespace Community.PowerToys.Run.Plugin.SVGL.Data;
 
 public interface IMyApiClient
 {
-    Task<List<SVGL>> GetSVGFromSource(string query);
-    Task<List<SVGL>> GetAllSVGs();
-    Task<string> GetSVGContent(string url);
+    Task<List<Svgl>> GetSvgFromSource(string query);
+    Task<List<Svgl>> GetAllSvGs();
+    Task<string> GetSvgContent(string url);
 }
 
 public class MyApiClients : IMyApiClient
 {
-    private static readonly HttpClient _httpClient = new HttpClient();
-    private static readonly string pattern = @"library/(.*?)(\.|$)";
-    private static readonly Regex SVGRegex = new Regex(pattern, RegexOptions.Compiled);
+    private static readonly HttpClient HttpClient = new();
+    private const string Pattern = @"library/(.*?)(\.|$)";
+    private static readonly Regex SvgRegex = new(Pattern, RegexOptions.Compiled);
 
-    public async Task<List<SVGL>> GetSVGFromSource(string query)
+    public async Task<List<Svgl>> GetSvgFromSource(string query)
     {
-        HttpResponseMessage response = await _httpClient.GetAsync(Constants.APIBaseURL + "?search=" + query);
+        var response = await HttpClient.GetAsync(Constants.ApiBaseUrl + "?search=" + query);
         response.EnsureSuccessStatusCode();
-        string data = await response.Content.ReadAsStringAsync();
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() } };
-        var parsedData = JsonSerializer.Deserialize<List<SVGL>>(data, options);
-        return parsedData!;
-    }
-
-    public async Task<List<SVGL>> GetAllSVGs()
-    {
-        HttpResponseMessage response = await _httpClient.GetAsync(Constants.APIBaseURL);
-        response.EnsureSuccessStatusCode();
-        string data = await response.Content.ReadAsStringAsync();
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() } };
-        var parsedData = JsonSerializer.Deserialize<List<SVGL>>(data, options);
-        return parsedData!;
-
-    }
-
-    public async Task<string> GetSVGContent(string url)
-    {
-        if (string.IsNullOrEmpty(url))
+        var data = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions
         {
-            throw new ArgumentNullException($"URL cannot be empty or empty.", nameof(url));
-        }
+            PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() }
+        };
+        var parsedData = JsonSerializer.Deserialize<List<Svgl>>(data, options);
+        return parsedData!;
+    }
 
-        Match match = SVGRegex.Match(url);
+    public async Task<List<Svgl>> GetAllSvGs()
+    {
+        var response = await HttpClient.GetAsync(Constants.ApiBaseUrl);
+        response.EnsureSuccessStatusCode();
+        var data = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true, Converters = { new ThemeBaseConverter(), new CategoryBaseConverter() }
+        };
+        var parsedData = JsonSerializer.Deserialize<List<Svgl>>(data, options);
+        return parsedData!;
+    }
+
+    public async Task<string> GetSvgContent(string url)
+    {
+        if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url), $"URL cannot be empty or empty.");
+
+        var match = SvgRegex.Match(url);
 
         if (!match.Success)
-        {
             throw new ArgumentException($"The URL does not contain a valid SVG identifier.", nameof(url));
-        }
 
-        string extractedSVGName = match.Groups[1].Value;
-        string fullURL = $"{Constants.SVGLBaseURL}{extractedSVGName}.svg";
-        Log.Info($"Fixed URL: {fullURL}", GetType());
+        var extractedSvgName = match.Groups[1].Value;
+        var fullUrl = $"{Constants.SvglBaseUrl}{extractedSvgName}.svg";
+        Log.Info($"Fixed URL: {fullUrl}", GetType());
 
-        HttpResponseMessage response = await _httpClient.GetAsync(fullURL);
+        var response = await HttpClient.GetAsync(fullUrl);
         response.EnsureSuccessStatusCode();
-        string data = await response.Content.ReadAsStringAsync();
+        var data = await response.Content.ReadAsStringAsync();
         return data;
     }
-
-
 }
