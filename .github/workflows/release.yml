@@ -74,12 +74,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.PLUGIN_NAME }}-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}
+          path: ${{ github.workspace }}/downloaded-artifacts
+
       - name: Upload Artifacts to GitHub Release
         shell: pwsh
         run: |
           $versionTag = "v${{ env.PLUGIN_VERSION }}"
           # Get all zip files from the downloaded artifacts folder (these should be the complete artifacts)
-          $files = Get-ChildItem -Path downloaded-artifacts -Filter "*.zip" -File -Recurse
+          $files = Get-ChildItem -Path ${{ github.workspace }}/downloaded-artifacts -Filter "*.zip" -File -Recurse
           foreach ($file in $files) {
               Write-Output "Uploading $($file.FullName) to release $versionTag"
               gh release upload $versionTag $file.FullName --clobber
