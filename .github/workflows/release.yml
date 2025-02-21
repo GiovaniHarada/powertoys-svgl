@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+env:
+  PLUGIN_NAME: SVGL
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [x64, ARM64]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read Version
+        run: |
+          [xml]$xml = Get-Content -Path Directory.Build.Props
+          echo "PLUGIN_VERSION=$($xml.Project.PropertyGroup.Version)" >> $env:GITHUB_ENV
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Build
+        run: dotnet build Community.PowerToys.Run.Plugin.SVGL.sln --configuration Release /p:Platform=${{matrix.platform}} /p:EnableWindowsTargeting=true
+
+      - name: Prepare Artifact
+        run: |
+          Remove-Path -Path Community.PowerToys.Run.Plugin.SVGL\bin\* -Recurse -Include *.xml, *pbd, PowerToys.*, Wox.*
+          Remove-Path -Path Community.PowerToys.Run.Plugin.SVGL\bin\${{matrix.platform}}\Release -NewName $env:PLUGIN_NAME
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.PLUGIN_NAME}}-${{env.PLUGIN_VERSION}}-${{matrix.platform}}
+          path: "Community.PowerToys.Run.Plugin.SVGL/bin/${{matrix.platform}}/*"
