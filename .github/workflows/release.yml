@@ -53,9 +53,9 @@ jobs:
           # Remove unwanted files
           Remove-Item -Path Community.PowerToys.Run.Plugin.SVGL\bin\* -Recurse -Include *.xml, *pdb, PowerToys.*, Wox.*
           # Rename the Release directory to the plugin name
-          Rename-Item -Path "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\Release" -NewName $env:PLUGIN_NAME
+          Rename-Item -Path Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\Release -NewName $env:PLUGIN_NAME
           # Create zip file
-          Compress-Archive -Path "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME" -DestinationPath "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}.zip"
+          Compress-Archive -Path "Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME" -DestinationPath Community.PowerToys.Run.Plugin.SVGL\bin\${{ matrix.platform }}\$env:PLUGIN_NAME-${{ env.PLUGIN_VERSION }}-${{ matrix.platform }}.zip
 
       - name: Upload to Release
         shell: pwsh
