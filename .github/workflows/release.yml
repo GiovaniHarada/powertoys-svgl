@@ -21,9 +21,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug Build Props File Path
+        run: pwd
+
       - name: Read Version
         run: |
-          [xml]$xml = Get-Content -Path Directory.Build.Props
+          [xml]$xml = Get-Content -Path "${{ github.workspace }}/Directory.Build.Props"
           echo "PLUGIN_VERSION=$($xml.Project.PropertyGroup.Version)" >> $env:GITHUB_ENV
 
       - name: Setup .NET
