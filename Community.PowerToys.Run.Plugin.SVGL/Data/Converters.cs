@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Community.PowerToys.Run.Plugin.SVGL;
+namespace Community.PowerToys.Run.Plugin.SVGL.Data;
 
 public class CategoryBaseConverter : JsonConverter<CategoryBase>
 {
@@ -11,7 +11,7 @@ public class CategoryBaseConverter : JsonConverter<CategoryBase>
     {
         if (reader.TokenType == JsonTokenType.String)
         {
-            string category = reader.GetString();
+            var category = reader.GetString();
             return new CategoryString(category);
         }
         else if (reader.TokenType == JsonTokenType.StartArray)
@@ -19,6 +19,7 @@ public class CategoryBaseConverter : JsonConverter<CategoryBase>
             var categories = JsonSerializer.Deserialize<List<string>>(ref reader, options);
             return new CategoryArray(categories);
         }
+
         throw new JsonException("Invalid JSON for CategoryBase");
     }
 
@@ -48,13 +49,13 @@ public class ThemeBaseConverter : JsonConverter<ThemeBase>
         if (reader.TokenType == JsonTokenType.String)
         {
             // Deserialize as ThemeString
-            string themeString = reader.GetString();
+            var themeString = reader.GetString();
             return new ThemeString(themeString);
         }
         else if (reader.TokenType == JsonTokenType.StartObject)
         {
             // Deserialize (Reading) as ThemeObject
-            SVGThemes themeObject = JsonSerializer.Deserialize<SVGThemes>(ref reader, options);
+            var themeObject = JsonSerializer.Deserialize<SvgThemes>(ref reader, options);
             return new ThemeObject(themeObject);
         }
 

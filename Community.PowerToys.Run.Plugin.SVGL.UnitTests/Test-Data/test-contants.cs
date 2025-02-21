@@ -1,4 +1,6 @@
-﻿namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests.Test_Data;
+﻿using Community.PowerToys.Run.Plugin.SVGL.Data;
+
+namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests.Test_Data;
 
 internal abstract class TestConstants
 {

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using Community.PowerToys.Run.Plugin.SVGL.Data;
+using Community.PowerToys.Run.Plugin.SVGL.Utils;
 using Wox.Plugin;
 
 namespace Community.PowerToys.Run.Plugin.SVGL.UnitTests.Test_Data;

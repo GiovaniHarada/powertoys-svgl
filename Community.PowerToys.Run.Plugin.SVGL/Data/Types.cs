@@ -4,100 +4,105 @@ using System.Text.Json.Serialization;
 using System.Windows.Input;
 using Wox.Plugin;
 
-namespace Community.PowerToys.Run.Plugin.SVGL;
+namespace Community.PowerToys.Run.Plugin.SVGL.Data;
 
-public class SVGL
+public class Svgl
 {
-    [JsonPropertyName("id")]
-    public int Id { get; set; }
+    [JsonPropertyName("id")] public int Id { get; set; }
 
-    [JsonPropertyName("title")]
-    public string Title { get; set; }
+    [JsonPropertyName("title")] public string Title { get; init; }
 
     [JsonPropertyName("category")]
     [JsonConverter(typeof(CategoryBaseConverter))]
-    public CategoryBase Category { get; set; }
+    public CategoryBase Category { get; init; }
 
     [JsonPropertyName("route")]
     [JsonConverter(typeof(ThemeBaseConverter))]
-    public ThemeBase Route { get; set; }
+    public ThemeBase Route { get; init; }
 
     [JsonPropertyName("wordmark")]
     [JsonConverter(typeof(ThemeBaseConverter))]
-    public ThemeBase Wordmark { get; set; }
+    public ThemeBase Wordmark { get; init; }
 
-    [JsonPropertyName("url")]
-    public string Url { get; set; }
+    [JsonPropertyName("url")] public string Url { get; set; }
 }
 
 public abstract class CategoryBase
-{ }
-
-public class CategoryString : CategoryBase
 {
-    public string Category { get; set; }
+}
 
-    public CategoryString(string category)
+public class CategoryString(string category) : CategoryBase
+{
+    public string Category { get; set; } = category;
+
+    public override string ToString()
     {
-        Category = category;
+        return Category;
     }
-
-    public override string ToString() => Category;
 }
 
-public class CategoryArray : CategoryBase
+public class CategoryArray(List<string> categories) : CategoryBase
 {
-    public List<string> Categories { get; set; }
+    public List<string> Categories { get; set; } = categories;
 
-    public CategoryArray(List<string> categories)
+    // public CategoryArray(List<string> categories)
+    // {
+    //     Categories = categories;
+    // }
+
+    public override string ToString()
     {
-        Categories = categories;
+        return string.Join(", ", Categories);
     }
-
-    public override string ToString() => string.Join(", ", Categories);
 }
 
-public class ThemeBase { }
-
-public class ThemeString : ThemeBase
+public class ThemeBase
 {
-    public string Route { get; set; }
+}
 
-    public ThemeString(string route)
+public class ThemeString(string route) : ThemeBase
+{
+    public string Route { get; set; } = route;
+
+    // public ThemeString(string route)
+    // {
+    //     Route = route;
+    // }
+
+    public override string ToString()
     {
-        Route = route;
+        return Route;
     }
-
-    public override string ToString() => Route;
 }
 
-public class ThemeObject : ThemeBase
+public class ThemeObject(SvgThemes route) : ThemeBase
 {
-    public SVGThemes Route { get; set; }
+    public SvgThemes Route { get; set; } = route;
 
-    public ThemeObject(SVGThemes route)
+    // public ThemeObject(SvgThemes route)
+    // {
+    //     Route = route;
+    // }
+
+    public override string ToString()
     {
-        Route = route;
+        return $"Light: {Route.Light}, Dark: {Route.Dark}";
     }
-
-    public override string ToString() => $"Light: {Route.Light}, Dark: {Route.Dark}";
 }
 
-public class SVGThemes
+public class SvgThemes
 {
-    [JsonPropertyName("light")]
-    public string Light { get; set; }
-    [JsonPropertyName("dark")]
-    public string Dark { get; set; }
+    [JsonPropertyName("light")] public string Light { get; set; }
+    [JsonPropertyName("dark")] public string Dark { get; set; }
 }
 
-public class INavigateToBrowserData
+public class NavigateToBrowserData
 {
     public string Identifier { get; set; }
     public string Search { get; set; }
 }
 
-public class IGetContextMenuResult
+public class GetContextMenuResult
 {
     public string Title { get; set; }
     public string Glyph { get; set; }
