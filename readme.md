@@ -10,21 +10,26 @@ This [**PowerToys Run**](https://github.com/microsoft/PowerToys) plugin enables 
 - Choose from multiple different variant i.e. Light, Dark or Themed Wordmark
 - Copy SVG to clipboard
 
-
 ## Installation
 
 1. Download the latest release of the SVGL Plugin from the [**Release page**.](https://github.com/SameerJS6/SVGL/releases)
-2. Extract the zip folder to your PowerToys Plugin modules directory. Usually: `%LOCALAPPDATA%\Microsoft\PowerToys\PowerToys Run\Plugins`
+2. Extract the zip folder to your PowerToys Plugin modules directory. Usually:
+
+```text
+%LOCALAPPDATA%\Microsoft\PowerToys\PowerToys Run\Plugins
+```
+
 3. Restart PowerToys
 
 ## Usage
 
 1. Open PowerToys Run using the default shortcut **`Alt`** + **`Space`**.
-2. Type `svgl` to initialize the plugin. *(If it's your first time, wait a moment for initialization.)*
+2. Type `svgl` to initialize the plugin. _(If it's your first time, wait a moment for initialization.)_
 3. Search for a company's logo by typing its name.
 4. Select your preferred logo—if multiple variants are available, you'll see relevant options in the context menu.
+
 - Hover or focus on a context menu item to view its **keyboard shortcut & action**.
-- *(For a full list of available commands, [click here](#commands).)*
+- _(For a full list of available commands, [click here](#commands).)_
 
 5. Press `Enter` to copy the SVG icon and paste it wherever you need—whether in **Figma, Adobe Illustrator, or directly in your code**! ✨
 
@@ -36,9 +41,8 @@ This project is licensed under the [MIT License](https://github.com/SameerJS6/SV
 
 1. The original [**SVGL**](https://github.com/pheralb/svgl) project by [Pablo Hdez](https://github.com/pheralb) for making this possible.
 2. [Corey] for providing guidance on building a PowerToys plugin and sharing valuable resources.
-3. [**Henrik Lau Erikson**](https://github.com/hlaueriksson) for writing an insightful blog on [Creating Custom PowerToys Run Plugin](https://conductofcode.io/post/creating-custom-powertoys-run-plugins/) and for developing a highly useful [Dependency Referencing NuGet Package](https://www.nuget.org/packages/Community.PowerToys.Run.Plugin.Dependencies/) for PowerToys Run plugin development. 
+3. [**Henrik Lau Erikson**](https://github.com/hlaueriksson) for writing an insightful blog on [Creating Custom PowerToys Run Plugin](https://conductofcode.io/post/creating-custom-powertoys-run-plugins/) and for developing a highly useful [Dependency Referencing NuGet Package](https://www.nuget.org/packages/Community.PowerToys.Run.Plugin.Dependencies/) for PowerToys Run plugin development.
 4. The [**SVGL Raycast Extension**](https://www.raycast.com/1weiho/svgl) by [Yiewi Ho](https://github.com/1weiho), featured in a [YouTube video](https://youtu.be/dQwJQnOxyVk?si=E72TxTEnHo83_sqk&t=370) by **Theo**, which inspired me and gave me the confidence to build something similar for Windows i.e. PowerToys.
-
 
 ## Roadmap
 
