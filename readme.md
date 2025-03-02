@@ -12,7 +12,7 @@ This [**PowerToys Run**](https://github.com/microsoft/PowerToys) plugin enables 
 
 ## Installation
 
-1. Download the latest release of the SVGL Plugin from the [**Release page**.](https://github.com/SameerJS6/SVGL/releases)
+1. Download the latest release of the SVGL Plugin from the [**Release page**.](https://github.com/SameerJS6/powertoys-svgl/releases)
 2. Extract the zip folder to your PowerToys Plugin modules directory. Usually:
 
 ```text
@@ -29,7 +29,7 @@ This [**PowerToys Run**](https://github.com/microsoft/PowerToys) plugin enables 
 4. Select your preferred logo—if multiple variants are available, you'll see relevant options in the context menu.
 
 - Hover or focus on a context menu item to view its **keyboard shortcut & action**.
-- _(For a full list of available commands, [click here](#commands).)_
+- _(For a full list of available commands, [click here](https://svgl.sameerjs.com/commands).)_
 
 5. Press `Enter` to copy the SVG icon and paste it wherever you need—whether in **Figma, Adobe Illustrator, or directly in your code**! ✨
 
