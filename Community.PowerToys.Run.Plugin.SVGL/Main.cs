@@ -20,7 +20,7 @@ public class Main : IPlugin, IContextMenu, IDisposable, IDelayedExecutionPlugin
     // ReSharper disable once InconsistentNaming
     public static string PluginID => "6401d691-f104-4a1b-9558-087abe8b84a2";
     public string Name => "SVGL";
-    public string Description => "SVGL Description";
+    public string Description => "Search and copy tech brand logos";
     private PluginInitContext Context { get; set; }
     private string IconPath { get; set; }
     private bool Disposed { get; set; }
@@ -313,7 +313,7 @@ public class Main : IPlugin, IContextMenu, IDisposable, IDelayedExecutionPlugin
         if (wordmark is ThemeString wordStr)
         {
             results.Add(Utils.Utils.CreateCopyMenuItem(Constants.CopySvgWordmarkMessage, "\xE8D2",
-                wordStr.Route, Key.Enter, ModifierKeys.Control));
+                wordStr.Route, Key.Enter, ModifierKeys.Shift));
         }
         else if (wordmark is ThemeObject wordObj)
         {
