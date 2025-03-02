@@ -16,7 +16,7 @@ public static class Constants
     public const string OpenInBrowserMessage = "Open in Browser (Enter)";
 
     public const string CopySvgLogoMessage = "Copy Logo SVG (Enter)";
-    public const string CopySvgWordmarkMessage = "Copy Wordmark SVG (Ctrl + Enter)";
+    public const string CopySvgWordmarkMessage = "Copy Wordmark SVG (Shift + Enter)";
 
     public const string CopyLightThemeSvgLogoMessage = "Copy Light Theme Logo (Enter)";
     public const string CopyDarkThemeSvgLogoMessage = "Copy Dark Theme Logo (Ctrl + Enter)";
