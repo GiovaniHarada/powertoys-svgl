@@ -1,14 +1,14 @@
 {
-    "ID": "6401d691-f104-4a1b-9558-087abe8b84a2",
-    "ActionKeyword": "svgl",
-    "IsGlobal": false,
-    "Name": "SVGL",
-    "Author": "SameerJS6",
-    "Version": "0.0.1",
-    "Language": "csharp",
-    "Website": "https://github.com/SameerJS6/SVGL",
-    "ExecuteFileName": "Community.PowerToys.Run.Plugin.SVGL.dll",
-    "IcoPathDark": "Images\\svgl-settings.dark.png",
-    "IcoPathLight": "Images\\svgl-settings.light.png",
-    "DynamicLoading": false
+  "ID": "6401d691-f104-4a1b-9558-087abe8b84a2",
+  "ActionKeyword": "svgl",
+  "IsGlobal": false,
+  "Name": "SVGL",
+  "Author": "SameerJS6",
+  "Version": "1.0.0",
+  "Language": "csharp",
+  "Website": "https://github.com/SameerJS6/SVGL",
+  "ExecuteFileName": "Community.PowerToys.Run.Plugin.SVGL.dll",
+  "IcoPathDark": "Images\\svgl-settings.dark.png",
+  "IcoPathLight": "Images\\svgl-settings.light.png",
+  "DynamicLoading": false
 }
