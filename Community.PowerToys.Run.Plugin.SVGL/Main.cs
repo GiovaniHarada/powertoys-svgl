@@ -18,7 +18,7 @@ public class Main : IPlugin, IContextMenu, IDisposable, IDelayedExecutionPlugin
 #pragma warning restore CsWinRT1028
 {
     // ReSharper disable once InconsistentNaming
-    public static string PluginID => "6401d691-f104-4a1b-9558-087abe8b84a2";
+    public static string PluginID => "6401d691f1044a1b9558087abe8b84a2";
     public string Name => "SVGL";
     public string Description => "Search and copy tech brand logos";
     private PluginInitContext Context { get; set; }
