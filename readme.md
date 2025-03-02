@@ -76,7 +76,6 @@ This project is licensed under the [MIT License](https://github.com/SameerJS6/SV
    - [x] Handle exceptions, particularly when fetching SVGs (e.g., tRPC dark-themed Wordmark SVG errors).
    - [x] Write unit tests to ensure reliability.
 
----
 
 ### Future Improvements 🛠️
 
@@ -90,7 +89,6 @@ This project is licensed under the [MIT License](https://github.com/SameerJS6/SV
   - Refactor `Types.cs` for better structure and maintainability.
   - Improve overall code quality, resolve build warnings, and enable `TreatWarningsAsErrors` in `csproj`.
 
----
 
 ### PowerToys Run Limitations & Workarounds ⚡
 
@@ -103,45 +101,3 @@ This project is licensed under the [MIT License](https://github.com/SameerJS6/SV
   - Improve context menu icons for better clarity.
   - Display actual SVGs as previews in search results.
   - Show a loading state when fetching results for the first time.
-
----
-
-## Roadmap
-
-### Version 0.0.1
-
-- [x] Add Debounce API Calls from Search
-- [x] Fix Context Menu Options.
-- [x] Fix Broken Icon from each result.
-- [x] Caching or something similar to that for results (atleast for default results).
-- [x] Fix the Multiple action keyword being displayed for default results.
-- [x] Add seperate Context Menu Options for copying light or Dark theme SVG.
-- [x] Conditional Display Light or Dark Theme Context Menu based on the does svg have light/dark theme or not.
-- [x] Add Copy SVG code Function.
-- [x] Add Wordmark Icon Copying options in Context Menu (For both themes if present).
-- [x] Add Context Menu for SVGL Results (i.e Copy Actual SVG Logo, Copy Actual Wordmark Logo).
-- [x] Restructure the entire codebase, to have two projects i.e Main Plugin & Unit Tests.
-- [x] Caching for Searched Results.
-- [x] Improve Search Results by adding some clause i.e perfect match, title startsWiths search query and title contains search query in earlier indexes.
-- [x] Write Unit Tests for the Codebase.
-- [x] Handle Error/Exception, when fetching actual SVG Code (Especially for tRPC's dark themed Wordmark SVG, where there's a error from SVGL's side).
-- [x] Show releavant context menu options for request logo and submit a logo result.
-- [x] Add a reload/re-validate cache command. Goal: In order to get latest results from the API, even though the cache gets re-validated whenever we start a new PowerToys Session but having a command to do is beneficial. Since, SVGL gets updated frequently, having a command which could just re-validate cache with starting a new session is nice to have.
-- [x] No Internet Connection Exception Handling and auto detect when internet connection is back and fetched from API, rather than showing No Internet Connection from cache.
-- [x] Refactor Codebase (Seperate Types, API Functions, etc).
-
-### Improvements for later versions
-
-- [ ] Add React SVG Component Function.
-- [ ] Implement better searching i.e Fuzzy Search
-- [ ] Improve `Types.cs`, since it's not that good for sure.
-- [ ] Add Feature to control all Context Menu Shortcuts from Settings.
-- [ ] Improve in-general code quality, to remove all those build warning about through build and enable `TreatWarningAsError` Property in `csproj`
-
-### Improvements that are imitated by PowerToys Run's Limitation.
-
-- [ ] Add Caching for SVG Code. (i.e Make Plugin Faster)
-- [ ] File based caching for results and time based re-validation. (i.e Make Plugin Faster)
-- [ ] Improve Icons for Context Menu Option.
-- [ ] Better Icon Previewing (Using the Actual SVG as Preview for that result).
-- [ ] Add Loading State/Result, when fetching for the first time.
