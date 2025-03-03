@@ -6,7 +6,7 @@
   "Author": "SameerJS6",
   "Version": "1.0.0",
   "Language": "csharp",
-  "Website": "https://github.com/Sameerjs6/powertoys-svgl",
+  "Website": "https://github.com/SameerJS6/powertoys-svgl",
   "ExecuteFileName": "Community.PowerToys.Run.Plugin.SVGL.dll",
   "IcoPathDark": "Images\\svgl-settings.dark.png",
   "IcoPathLight": "Images\\svgl-settings.light.png",
