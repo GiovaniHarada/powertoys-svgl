@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using Community.PowerToys.Run.Plugin.SVGL.Data;
+using Windows.ApplicationModel.DataTransfer;
 using Wox.Plugin;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Community.PowerToys.Run.Plugin.SVGL.Utils;
 
@@ -15,7 +16,11 @@ internal static class Utils
     private static bool CopyToClipboard(string value)
     {
         if (string.IsNullOrEmpty(value)) return false;
-        Clipboard.SetText(value);
+        var dataPackage = new DataPackage();
+        dataPackage.SetText(value);
+        Clipboard.SetContent(dataPackage);
+        Clipboard.Flush();
+
         return true;
     }
 
